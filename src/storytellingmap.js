@@ -17,10 +17,13 @@ function StoryMap(options) {
             }).addTo(map);
 
             return map;
-        }
+        },
+        trigger: 'scroll' // Default trigger is scroll other options: mouseover, both
     };
 
     const settings = { ...defaults, ...options };
+
+    let isScrolling = false;
 
     function getDistanceToTop(elem, top) {
         const docViewTop = window.scrollY;
@@ -40,7 +43,6 @@ function StoryMap(options) {
             return { el: element, distance: dist };
         });
 
-        //min
         const closest = distances.reduce((min, current) => {
             return current.distance < min.distance ? current : min;
         }, distances[0]);
@@ -58,10 +60,51 @@ function StoryMap(options) {
 
     function watchHighlight(element, searchfor, top) {
         const paragraphs = element.querySelectorAll(searchfor);
-        highlightTopPara(paragraphs, top);
-        window.addEventListener('scroll', function () {
-            highlightTopPara(paragraphs, top);
+
+        paragraphs.forEach(function (paragraph) {
+            paragraph.addEventListener('viewing', function () {
+                paragraph.classList.add('viewing');
+            });
+
+            paragraph.addEventListener('notviewing', function () {
+                paragraph.classList.remove('viewing');
+            });
+
+            if (settings.trigger === 'mouseover' || settings.trigger === 'both') {
+                // Add mouseover event listener
+                paragraph.addEventListener('mouseover', function () {
+                    if (!isScrolling) {
+                        paragraphs.forEach(function (p) {
+                            if (p !== paragraph) {
+                                p.dispatchEvent(new CustomEvent('notviewing'));
+                            }
+                        });
+                        if (!paragraph.classList.contains('viewing')) {
+                            paragraph.dispatchEvent(new CustomEvent('viewing'));
+                        }
+                    }
+                });
+
+                // Add mouseout event listener to reset on scroll
+                paragraph.addEventListener('mouseout', function () {
+                    // Reset on scroll if not currently hovered
+                    window.addEventListener('scroll', function resetOnScroll() {
+                        highlightTopPara(paragraphs, top);
+                        window.removeEventListener('scroll', resetOnScroll);
+                    }, { once: true });
+                });
+            }
         });
+
+        if (settings.trigger === 'scroll' || settings.trigger === 'both') {
+            window.addEventListener('scroll', function () {
+                isScrolling = true;
+                highlightTopPara(paragraphs, top);
+                setTimeout(() => {
+                    isScrolling = false;
+                }, 200); // Reset after a short delay
+            });
+        }
     }
 
     function makeStoryMap(element, markers) {
@@ -75,16 +118,6 @@ function StoryMap(options) {
         const searchfor = settings.selector;
 
         const paragraphs = element.querySelectorAll(searchfor);
-
-        paragraphs.forEach(function (paragraph) {
-            paragraph.addEventListener('viewing', function () {
-                paragraph.classList.add('viewing');
-            });
-
-            paragraph.addEventListener('notviewing', function () {
-                paragraph.classList.remove('viewing');
-            });
-        });
 
         watchHighlight(element, searchfor, top);
 
