@@ -1,9 +1,6 @@
-// Ensure Leaflet and Underscore are loaded
+// Ensure Leaflet is loaded
 if (typeof L === 'undefined') {
     throw new Error('Storymap requires Leaflet');
-}
-if (typeof _ === 'undefined') {
-    throw new Error('Storymap requires underscore.js');
 }
 
 function StoryMap(options) {
@@ -38,14 +35,15 @@ function StoryMap(options) {
     }
 
     function highlightTopPara(paragraphs, top) {
-        const distances = _.map(paragraphs, function (element) {
+        const distances = Array.from(paragraphs).map(function (element) {
             const dist = getDistanceToTop(element, top);
             return { el: element, distance: dist };
         });
 
-        const closest = _.min(distances, function (dist) {
-            return dist.distance;
-        });
+        //min
+        const closest = distances.reduce((min, current) => {
+            return current.distance < min.distance ? current : min;
+        }, distances[0]);
 
         paragraphs.forEach(function (element) {
             if (element !== closest.el) {
@@ -118,5 +116,3 @@ function StoryMap(options) {
 
     makeStoryMap(document.querySelector(settings.container), settings.markers);
 }
-
-
