@@ -388,6 +388,32 @@
         StoryMap({
           container: '.main',
           markers: markers,
+          paths: [
+            {
+              from: 'bergen',
+              to: 'trondheim',
+              options: {
+                color: 'blue',
+                weight: 2,
+                dashArray: '5, 5',
+              },
+              tooltip: 'bergen to trondheim',
+            },
+            {
+              from: 'trondheim',
+              to: 'bodo',
+              options: {
+                color: 'green',
+                weight: 3,
+              },
+            },
+          ],
+          // Default path styling (used if not specified in individual paths)
+          pathOptions: {
+            color: 'red',
+            weight: 3,
+            opacity: 0.7,
+          },
         });
       })();
     </script>

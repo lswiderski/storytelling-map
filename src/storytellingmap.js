@@ -18,12 +18,19 @@ function StoryMap(options) {
 
             return map;
         },
-        trigger: 'scroll' // Default trigger is scroll other options: mouseover, both
+        trigger: 'scroll', // Default trigger is scroll
+        paths: [], // Default empty paths array
+        pathOptions: {
+            color: 'red',
+            weight: 3,
+            opacity: 0.7
+        }
     };
 
     const settings = { ...defaults, ...options };
 
     let isScrolling = false;
+    let pathsLayerGroup = null;
 
     function getDistanceToTop(elem, top) {
         const docViewTop = window.scrollY;
@@ -136,6 +143,46 @@ function StoryMap(options) {
         }
     }
 
+    // Function to create paths between markers
+    function createPaths(map, markers, paths) {
+        if (!paths || paths.length === 0) return null;
+
+        // Create a layer group for all paths
+        const layerGroup = L.layerGroup().addTo(map);
+
+        // Create each path
+        paths.forEach(path => {
+            if (!path.from || !path.to || !markers[path.from] || !markers[path.to]) {
+                console.warn('Invalid path configuration:', path);
+                return;
+            }
+
+            const fromMarker = markers[path.from];
+            const toMarker = markers[path.to];
+
+            const latlngs = [
+                [fromMarker.lat, fromMarker.lon],
+                [toMarker.lat, toMarker.lon]
+            ];
+
+            // Use custom path options if provided, otherwise use default
+            const pathOptions = path.options || settings.pathOptions;
+
+            const polyline = L.polyline(latlngs, pathOptions).addTo(layerGroup);
+
+            // Add any additional path properties
+            if (path.popup) {
+                polyline.bindPopup(path.popup);
+            }
+
+            if (path.tooltip) {
+                polyline.bindTooltip(path.tooltip);
+            }
+        });
+
+        return layerGroup;
+    }
+
     function makeStoryMap(element, markers) {
         const topElem = document.createElement('div');
         topElem.classList.add('breakpoint-current');
@@ -154,6 +201,9 @@ function StoryMap(options) {
         const initZoom = map.getZoom();
 
         const fg = L.featureGroup().addTo(map);
+
+        // Create paths between markers
+        pathsLayerGroup = createPaths(map, markers, settings.paths);
 
         function showMapView(key) {
             fg.clearLayers();
