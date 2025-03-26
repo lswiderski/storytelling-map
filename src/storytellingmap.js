@@ -38,30 +38,56 @@ function StoryMap(options) {
     }
 
     function highlightTopPara(paragraphs, top) {
-        const distances = Array.from(paragraphs).map(function (element) {
-            const dist = getDistanceToTop(element, top);
-            return { el: element, distance: dist };
+        const paragraphsArray = Array.from(paragraphs); // Convert NodeList to array
+        const viewportTop = window.scrollY;
+        const viewportBottom = viewportTop + window.innerHeight;
+
+        // Find paragraphs within the viewport
+        const visibleParagraphs = paragraphsArray.filter(function (element) {
+            const elemTop = element.offsetTop;
+            const elemBottom = elemTop + element.offsetHeight;
+
+            return (elemTop <= viewportBottom && elemBottom >= viewportTop);
         });
 
-        const closest = distances.reduce((min, current) => {
-            return current.distance < min.distance ? current : min;
-        }, distances[0]);
+        if (visibleParagraphs.length === 0) {
+            // If no paragraphs are visible, find the closest one
+            const distances = paragraphsArray.map(function (element) {
+                const dist = getDistanceToTop(element, top);
+                return { el: element, distance: dist };
+            });
 
-        paragraphs.forEach(function (element) {
-            if (element !== closest.el) {
-                element.dispatchEvent(new CustomEvent('notviewing'));
+            const closest = distances.reduce((min, current) => {
+                return current.distance < min.distance ? current : min;
+            }, distances[0]);
+
+            paragraphsArray.forEach(function (element) {
+                if (element !== closest.el) {
+                    element.dispatchEvent(new CustomEvent('notviewing'));
+                }
+            });
+
+            if (!closest.el.classList.contains('viewing')) {
+                closest.el.dispatchEvent(new CustomEvent('viewing'));
             }
-        });
+        } else {
+            // Highlight the first visible paragraph
+            paragraphsArray.forEach(function (element) {
+                if (element !== visibleParagraphs[0]) {
+                    element.dispatchEvent(new CustomEvent('notviewing'));
+                }
+            });
 
-        if (!closest.el.classList.contains('viewing')) {
-            closest.el.dispatchEvent(new CustomEvent('viewing'));
+            if (!visibleParagraphs[0].classList.contains('viewing')) {
+                visibleParagraphs[0].dispatchEvent(new CustomEvent('viewing'));
+            }
         }
     }
 
     function watchHighlight(element, searchfor, top) {
         const paragraphs = element.querySelectorAll(searchfor);
 
-        paragraphs.forEach(function (paragraph) {
+        Array.from(paragraphs).forEach(function (paragraph) {
             paragraph.addEventListener('viewing', function () {
                 paragraph.classList.add('viewing');
             });
@@ -74,7 +100,7 @@ function StoryMap(options) {
                 // Add mouseover event listener
                 paragraph.addEventListener('mouseover', function () {
                     if (!isScrolling) {
-                        paragraphs.forEach(function (p) {
+                        Array.from(paragraphs).forEach(function (p) {
                             if (p !== paragraph) {
                                 p.dispatchEvent(new CustomEvent('notviewing'));
                             }
@@ -104,6 +130,9 @@ function StoryMap(options) {
                     isScrolling = false;
                 }, 200); // Reset after a short delay
             });
+
+            // Execute highlighting logic on page load
+            highlightTopPara(paragraphs, top);
         }
     }
 
@@ -116,8 +145,6 @@ function StoryMap(options) {
         const top = topElem.offsetTop - window.scrollY;
 
         const searchfor = settings.selector;
-
-        const paragraphs = element.querySelectorAll(searchfor);
 
         watchHighlight(element, searchfor, top);
 
@@ -140,7 +167,7 @@ function StoryMap(options) {
             }
         }
 
-        paragraphs.forEach(function (paragraph) {
+        Array.from(element.querySelectorAll(searchfor)).forEach(function (paragraph) {
             paragraph.addEventListener('viewing', function () {
                 showMapView(paragraph.dataset.place);
             });
