@@ -6,7 +6,8 @@ if (typeof L === 'undefined') {
 function StoryMap(options) {
     const defaults = {
         selector: '[data-place]',
-        breakpointPos: '30.333%',
+        breakpointPos: '33.333%',
+        markerClickScrollToPlace: true, // Enable marker click to navigate and highlight sections
         createMap: function () {
             // Create a map in the "map" div, set the view to a given place and zoom
             const map = L.map('map').setView([65, 18], 5);
@@ -209,7 +210,15 @@ function StoryMap(options) {
                 // Show all markers in overview mode
                 Object.keys(markers).forEach(markerKey => {
                     const marker = markers[markerKey];
-                    L.marker([marker.lat, marker.lon]).addTo(markerFeatureGroup);
+                    const leafletMarker = L.marker([marker.lat, marker.lon]).addTo(markerFeatureGroup);
+
+                    // Add click event to navigate to section if markerClickScrollToPlace is enabled
+                    if (settings.markerClickScrollToPlace) {
+                        leafletMarker.on('click', function () {
+                            showMapView(markerKey);
+                            scrollToAndHighlightSection(markerKey);
+                        });
+                    }
                 });
 
                 // Make sure paths are visible
@@ -218,13 +227,37 @@ function StoryMap(options) {
                 }
             } else if (markers[key]) {
                 const marker = markers[key];
-                L.marker([marker.lat, marker.lon]).addTo(markerFeatureGroup);
+                const leafletMarker = L.marker([marker.lat, marker.lon]).addTo(markerFeatureGroup);
                 map.setView([marker.lat, marker.lon], marker.zoom || 10, true);
 
+                // Add click event to navigate to section if markerClickScrollToPlace is enabled
+                if (settings.markerClickScrollToPlace) {
+                    leafletMarker.on('click', function () {
+                        showMapView(key);
+                        scrollToAndHighlightSection(key);
+                    });
+                }
                 // Make sure paths are visible
                 if (pathsLayerGroup) {
                     pathsLayerGroup.addTo(map);
                 }
+            }
+        }
+
+        function scrollToAndHighlightSection(dataPlace) {
+            const section = element.querySelector(`[data-place="${dataPlace}"]`);
+            if (section) {
+                // Scroll section into view
+                section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                // Highlight the section
+                Array.from(element.querySelectorAll(searchfor)).forEach(function (paragraph) {
+                    if (paragraph.dataset.place === dataPlace) {
+                        paragraph.dispatchEvent(new CustomEvent('viewing'));
+                    } else {
+                        paragraph.dispatchEvent(new CustomEvent('notviewing'));
+                    }
+                });
             }
         }
 
