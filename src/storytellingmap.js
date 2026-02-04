@@ -227,16 +227,24 @@ function StoryMap(options) {
                 }
             } else if (markers[key]) {
                 const marker = markers[key];
-                const leafletMarker = L.marker([marker.lat, marker.lon]).addTo(markerFeatureGroup);
+                
+                // Show all markers
+                Object.keys(markers).forEach(markerKey => {
+                    const m = markers[markerKey];
+                    const leafletMarker = L.marker([m.lat, m.lon]).addTo(markerFeatureGroup);
+
+                    // Add click event to navigate to section if markerClickScrollToPlace is enabled
+                    if (settings.markerClickScrollToPlace) {
+                        leafletMarker.on('click', function () {
+                            showMapView(markerKey);
+                            scrollToAndHighlightSection(markerKey);
+                        });
+                    }
+                });
+                
+                // Zoom to the selected marker
                 map.setView([marker.lat, marker.lon], marker.zoom || 10, true);
 
-                // Add click event to navigate to section if markerClickScrollToPlace is enabled
-                if (settings.markerClickScrollToPlace) {
-                    leafletMarker.on('click', function () {
-                        showMapView(key);
-                        scrollToAndHighlightSection(key);
-                    });
-                }
                 // Make sure paths are visible
                 if (pathsLayerGroup) {
                     pathsLayerGroup.addTo(map);
