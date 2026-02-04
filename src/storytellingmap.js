@@ -31,6 +31,7 @@ function StoryMap(options) {
 
     let isScrolling = false;
     let pathsLayerGroup = null;
+    let markerFeatureGroup = null;
 
     function getDistanceToTop(elem, top) {
         const docViewTop = window.scrollY;
@@ -78,6 +79,7 @@ function StoryMap(options) {
                 closest.el.dispatchEvent(new CustomEvent('viewing'));
             }
         } else {
+            debugger;
             // Highlight the first visible paragraph
             paragraphsArray.forEach(function (element) {
                 if (element !== visibleParagraphs[0]) {
@@ -145,10 +147,16 @@ function StoryMap(options) {
 
     // Function to create paths between markers
     function createPaths(map, markers, paths) {
+        // Clear any existing paths
+        if (pathsLayerGroup) {
+            map.removeLayer(pathsLayerGroup);
+        }
+
+        // If no paths, return null
         if (!paths || paths.length === 0) return null;
 
-        // Create a layer group for all paths
-        const layerGroup = L.layerGroup().addTo(map);
+        // Create a feature group for all paths
+        const layerGroup = L.featureGroup().addTo(map);
 
         // Create each path
         paths.forEach(path => {
@@ -160,15 +168,18 @@ function StoryMap(options) {
             const fromMarker = markers[path.from];
             const toMarker = markers[path.to];
 
+            // Ensure coordinates are in the correct format [lat, lng]
             const latlngs = [
                 [fromMarker.lat, fromMarker.lon],
                 [toMarker.lat, toMarker.lon]
             ];
 
             // Use custom path options if provided, otherwise use default
-            const pathOptions = path.options || settings.pathOptions;
+            const pathOptions = { ...settings.pathOptions, ...(path.options || {}) };
 
-            const polyline = L.polyline(latlngs, pathOptions).addTo(layerGroup);
+            // Create and add the polyline to the layer group
+            const polyline = L.polyline(latlngs, pathOptions);
+            polyline.addTo(layerGroup);
 
             // Add any additional path properties
             if (path.popup) {
@@ -179,6 +190,11 @@ function StoryMap(options) {
                 polyline.bindTooltip(path.tooltip);
             }
         });
+
+        // Fit bounds to show all paths
+        if (layerGroup.getLayers().length > 0) {
+            map.fitBounds(layerGroup.getBounds());
+        }
 
         return layerGroup;
     }
@@ -200,20 +216,37 @@ function StoryMap(options) {
         const initPoint = map.getCenter();
         const initZoom = map.getZoom();
 
-        const fg = L.featureGroup().addTo(map);
+        // Create a feature group for markers
+        markerFeatureGroup = L.featureGroup().addTo(map);
 
         // Create paths between markers
         pathsLayerGroup = createPaths(map, markers, settings.paths);
 
         function showMapView(key) {
-            fg.clearLayers();
+            markerFeatureGroup.clearLayers();
+
             if (key === 'overview') {
                 map.setView(initPoint, initZoom, true);
+
+                // Show all markers in overview mode
+                Object.keys(markers).forEach(markerKey => {
+                    const marker = markers[markerKey];
+                    L.marker([marker.lat, marker.lon]).addTo(markerFeatureGroup);
+                });
+
+                // Make sure paths are visible
+                if (pathsLayerGroup) {
+                    pathsLayerGroup.addTo(map);
+                }
             } else if (markers[key]) {
                 const marker = markers[key];
-                fg.addLayer(L.marker([marker.lat, marker.lon]));
+                L.marker([marker.lat, marker.lon]).addTo(markerFeatureGroup);
+                map.setView([marker.lat, marker.lon], marker.zoom || 10, true);
 
-                map.setView([marker.lat, marker.lon], marker.zoom, 1);
+                // Make sure paths are visible
+                if (pathsLayerGroup) {
+                    pathsLayerGroup.addTo(map);
+                }
             }
         }
 
@@ -222,7 +255,19 @@ function StoryMap(options) {
                 showMapView(paragraph.dataset.place);
             });
         });
+
+        // Initial view
+        if (settings.initialView) {
+            showMapView(settings.initialView);
+        } else {
+            showMapView('overview');
+        }
     }
 
     makeStoryMap(document.querySelector(settings.container), settings.markers);
+
+    // Return public methods if needed
+    return {
+        // Add any public methods here
+    };
 }
