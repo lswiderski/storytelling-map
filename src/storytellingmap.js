@@ -31,6 +31,7 @@ function StoryMap(options) {
     const settings = { ...defaults, ...options };
 
     let isScrolling = false;
+    let isMarkerNavigation = false; // Flag to track when user clicks a marker
     let pathsLayerGroup = null;
     let markerFeatureGroup = null;
 
@@ -110,6 +111,11 @@ function StoryMap(options) {
 
         if (settings.trigger === 'scroll' || settings.trigger === 'both') {
             window.addEventListener('scroll', function () {
+                // Skip highlighting if we're in marker navigation mode
+                if (isMarkerNavigation) {
+                    return;
+                }
+
                 isScrolling = true;
                 highlightTopPara(paragraphs, breakpointElement);
                 setTimeout(() => {
@@ -242,7 +248,7 @@ function StoryMap(options) {
                     }
                 });
 
-                // Zoom to the selected marker with smooth animation
+                // Zoom to the selected marker
                 map.setView([marker.lat, marker.lon], marker.zoom || 10, { animate: true, duration: 1.5 });
 
                 // Make sure paths are visible
@@ -255,11 +261,24 @@ function StoryMap(options) {
         function scrollToAndHighlightSection(dataPlace) {
             const section = element.querySelector(`[data-place="${dataPlace}"]`);
             if (section) {
+                // Set marker navigation flag to prevent intermediate section highlighting
+                isMarkerNavigation = true;
+
                 // Calculate breakpoint position in viewport
                 const breakpointViewportPos = window.innerHeight * parseFloat(settings.breakpointPos) / 100;
 
                 // Calculate scroll position to align section with breakpoint
                 const scrollPos = section.offsetTop - breakpointViewportPos;
+
+                // Immediately highlight the target section (ignore breakpoint)
+                const paragraphs = element.querySelectorAll(searchfor);
+                Array.from(paragraphs).forEach(function (paragraph) {
+                    if (paragraph.dataset.place === dataPlace) {
+                        paragraph.dispatchEvent(new CustomEvent('viewing'));
+                    } else {
+                        paragraph.dispatchEvent(new CustomEvent('notviewing'));
+                    }
+                });
 
                 // Temporarily disable scroll-based highlighting to avoid conflicts
                 isScrolling = true;
@@ -267,20 +286,11 @@ function StoryMap(options) {
                 // Scroll to position
                 window.scrollTo({ top: scrollPos, behavior: 'smooth' });
 
-                // Highlight the section after scroll completes
+                // Keep the target section selected and re-enable normal highlighting after scroll completes
                 setTimeout(function () {
-                    // Manually trigger highlighting for the correct section
-                    const paragraphs = element.querySelectorAll(searchfor);
-                    Array.from(paragraphs).forEach(function (paragraph) {
-                        if (paragraph.dataset.place === dataPlace) {
-                            paragraph.dispatchEvent(new CustomEvent('viewing'));
-                        } else {
-                            paragraph.dispatchEvent(new CustomEvent('notviewing'));
-                        }
-                    });
-
                     // Re-enable scroll-based highlighting
                     isScrolling = false;
+                    isMarkerNavigation = false;
                 }, 500);
             }
         }
