@@ -205,7 +205,7 @@ function StoryMap(options) {
             markerFeatureGroup.clearLayers();
 
             if (key === 'overview') {
-                map.setView(initPoint, initZoom, true);
+                map.setView(initPoint, initZoom, { animate: true, duration: 1.5 });
 
                 // Show all markers in overview mode
                 Object.keys(markers).forEach(markerKey => {
@@ -227,7 +227,7 @@ function StoryMap(options) {
                 }
             } else if (markers[key]) {
                 const marker = markers[key];
-                
+
                 // Show all markers
                 Object.keys(markers).forEach(markerKey => {
                     const m = markers[markerKey];
@@ -241,9 +241,9 @@ function StoryMap(options) {
                         });
                     }
                 });
-                
-                // Zoom to the selected marker
-                map.setView([marker.lat, marker.lon], marker.zoom || 10, true);
+
+                // Zoom to the selected marker with smooth animation
+                map.setView([marker.lat, marker.lon], marker.zoom || 10, { animate: true, duration: 1.5 });
 
                 // Make sure paths are visible
                 if (pathsLayerGroup) {
@@ -257,13 +257,13 @@ function StoryMap(options) {
             if (section) {
                 // Calculate breakpoint position in viewport
                 const breakpointViewportPos = window.innerHeight * parseFloat(settings.breakpointPos) / 100;
-                
+
                 // Calculate scroll position to align section with breakpoint
                 const scrollPos = section.offsetTop - breakpointViewportPos;
-                
+
                 // Temporarily disable scroll-based highlighting to avoid conflicts
                 isScrolling = true;
-                
+
                 // Scroll to position
                 window.scrollTo({ top: scrollPos, behavior: 'smooth' });
 
@@ -278,7 +278,7 @@ function StoryMap(options) {
                             paragraph.dispatchEvent(new CustomEvent('notviewing'));
                         }
                     });
-                    
+
                     // Re-enable scroll-based highlighting
                     isScrolling = false;
                 }, 500);
