@@ -6,7 +6,7 @@ if (typeof L === 'undefined') {
 function StoryMap(options) {
     const defaults = {
         selector: '[data-place]',
-        breakpointPos: '33.333%',
+        breakpointPos: '30.333%',
         createMap: function () {
             // Create a map in the "map" div, set the view to a given place and zoom
             const map = L.map('map').setView([65, 18], 5);
@@ -33,67 +33,43 @@ function StoryMap(options) {
     let pathsLayerGroup = null;
     let markerFeatureGroup = null;
 
-    function getDistanceToTop(elem, top) {
-        const docViewTop = window.scrollY;
+    function getDistanceToTop(elem, breakpointElement) {
         const elemTop = elem.offsetTop;
-        const dist = elemTop - docViewTop;
-        const d1 = top - dist;
+        const elemCenter = elemTop + elem.offsetHeight / 2;
 
-        if (d1 < 0) {
-            return window.innerHeight;
-        }
-        return d1;
+        // Get breakpoint position - it's fixed to viewport at breakpointPos percentage
+        const breakpointViewportPos = window.innerHeight * parseFloat(settings.breakpointPos) / 100;
+        const breakpointPagePos = window.scrollY + breakpointViewportPos;
+
+        // Calculate absolute distance from element center to breakpoint
+        return Math.abs(elemCenter - breakpointPagePos);
     }
 
-    function highlightTopPara(paragraphs, top) {
+    function highlightTopPara(paragraphs, breakpointElement) {
         const paragraphsArray = Array.from(paragraphs); // Convert NodeList to array
-        const viewportTop = window.scrollY;
-        const viewportBottom = viewportTop + window.innerHeight;
 
-        // Find paragraphs within the viewport
-        const visibleParagraphs = paragraphsArray.filter(function (element) {
-            const elemTop = element.offsetTop;
-            const elemBottom = elemTop + element.offsetHeight;
-
-            return (elemTop <= viewportBottom && elemBottom >= viewportTop);
+        // Always find the section closest to the breakpoint-current line
+        const distances = paragraphsArray.map(function (element) {
+            const dist = getDistanceToTop(element, breakpointElement);
+            return { el: element, distance: dist };
         });
 
-        if (visibleParagraphs.length === 0) {
-            // If no paragraphs are visible, find the closest one
-            const distances = paragraphsArray.map(function (element) {
-                const dist = getDistanceToTop(element, top);
-                return { el: element, distance: dist };
-            });
+        const closest = distances.reduce((min, current) => {
+            return current.distance < min.distance ? current : min;
+        }, distances[0]);
 
-            const closest = distances.reduce((min, current) => {
-                return current.distance < min.distance ? current : min;
-            }, distances[0]);
-
-            paragraphsArray.forEach(function (element) {
-                if (element !== closest.el) {
-                    element.dispatchEvent(new CustomEvent('notviewing'));
-                }
-            });
-
-            if (!closest.el.classList.contains('viewing')) {
-                closest.el.dispatchEvent(new CustomEvent('viewing'));
+        paragraphsArray.forEach(function (element) {
+            if (element !== closest.el) {
+                element.dispatchEvent(new CustomEvent('notviewing'));
             }
-        } else {
-            debugger;
-            // Highlight the first visible paragraph
-            paragraphsArray.forEach(function (element) {
-                if (element !== visibleParagraphs[0]) {
-                    element.dispatchEvent(new CustomEvent('notviewing'));
-                }
-            });
+        });
 
-            if (!visibleParagraphs[0].classList.contains('viewing')) {
-                visibleParagraphs[0].dispatchEvent(new CustomEvent('viewing'));
-            }
+        if (!closest.el.classList.contains('viewing')) {
+            closest.el.dispatchEvent(new CustomEvent('viewing'));
         }
     }
 
-    function watchHighlight(element, searchfor, top) {
+    function watchHighlight(element, searchfor, breakpointElement) {
         const paragraphs = element.querySelectorAll(searchfor);
 
         Array.from(paragraphs).forEach(function (paragraph) {
@@ -124,7 +100,7 @@ function StoryMap(options) {
                 paragraph.addEventListener('mouseout', function () {
                     // Reset on scroll if not currently hovered
                     window.addEventListener('scroll', function resetOnScroll() {
-                        highlightTopPara(paragraphs, top);
+                        highlightTopPara(paragraphs, breakpointElement);
                         window.removeEventListener('scroll', resetOnScroll);
                     }, { once: true });
                 });
@@ -134,14 +110,14 @@ function StoryMap(options) {
         if (settings.trigger === 'scroll' || settings.trigger === 'both') {
             window.addEventListener('scroll', function () {
                 isScrolling = true;
-                highlightTopPara(paragraphs, top);
+                highlightTopPara(paragraphs, breakpointElement);
                 setTimeout(() => {
                     isScrolling = false;
                 }, 200); // Reset after a short delay
             });
 
             // Execute highlighting logic on page load
-            highlightTopPara(paragraphs, top);
+            highlightTopPara(paragraphs, breakpointElement);
         }
     }
 
@@ -205,11 +181,13 @@ function StoryMap(options) {
         topElem.style.top = settings.breakpointPos;
         document.body.appendChild(topElem);
 
-        const top = topElem.offsetTop - window.scrollY;
-
         const searchfor = settings.selector;
 
-        watchHighlight(element, searchfor, top);
+        watchHighlight(element, searchfor, topElem);
+
+        // Ensure closest section is highlighted on page load
+        const paragraphs = element.querySelectorAll(searchfor);
+        highlightTopPara(paragraphs, topElem);
 
         const map = settings.createMap();
 
