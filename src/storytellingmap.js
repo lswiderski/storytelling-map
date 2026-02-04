@@ -255,17 +255,33 @@ function StoryMap(options) {
         function scrollToAndHighlightSection(dataPlace) {
             const section = element.querySelector(`[data-place="${dataPlace}"]`);
             if (section) {
-                // Scroll section into view
-                section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Calculate breakpoint position in viewport
+                const breakpointViewportPos = window.innerHeight * parseFloat(settings.breakpointPos) / 100;
+                
+                // Calculate scroll position to align section with breakpoint
+                const scrollPos = section.offsetTop - breakpointViewportPos;
+                
+                // Temporarily disable scroll-based highlighting to avoid conflicts
+                isScrolling = true;
+                
+                // Scroll to position
+                window.scrollTo({ top: scrollPos, behavior: 'smooth' });
 
-                // Highlight the section
-                Array.from(element.querySelectorAll(searchfor)).forEach(function (paragraph) {
-                    if (paragraph.dataset.place === dataPlace) {
-                        paragraph.dispatchEvent(new CustomEvent('viewing'));
-                    } else {
-                        paragraph.dispatchEvent(new CustomEvent('notviewing'));
-                    }
-                });
+                // Highlight the section after scroll completes
+                setTimeout(function () {
+                    // Manually trigger highlighting for the correct section
+                    const paragraphs = element.querySelectorAll(searchfor);
+                    Array.from(paragraphs).forEach(function (paragraph) {
+                        if (paragraph.dataset.place === dataPlace) {
+                            paragraph.dispatchEvent(new CustomEvent('viewing'));
+                        } else {
+                            paragraph.dispatchEvent(new CustomEvent('notviewing'));
+                        }
+                    });
+                    
+                    // Re-enable scroll-based highlighting
+                    isScrolling = false;
+                }, 500);
             }
         }
 
