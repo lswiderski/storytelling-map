@@ -211,7 +211,7 @@ function StoryMap(options) {
             markerFeatureGroup.clearLayers();
 
             if (key === 'overview') {
-                map.setView(initPoint, initZoom, { animate: true, duration: 1.5 });
+                map.flyTo(initPoint, initZoom, { animate: true, duration: 1.5 });
 
                 // Show all markers in overview mode
                 Object.keys(markers).forEach(markerKey => {
@@ -249,7 +249,7 @@ function StoryMap(options) {
                 });
 
                 // Zoom to the selected marker
-                map.setView([marker.lat, marker.lon], marker.zoom || 10, { animate: true, duration: 1.5 });
+                map.flyTo([marker.lat, marker.lon], marker.zoom || 10, { animate: true, duration: 1.5 });
 
                 // Make sure paths are visible
                 if (pathsLayerGroup) {
