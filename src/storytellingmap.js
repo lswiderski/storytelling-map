@@ -403,8 +403,10 @@ function StoryMap(options) {
                 // Calculate breakpoint position in viewport
                 const breakpointViewportPos = window.innerHeight * parseFloat(settings.breakpointPos) / 100;
 
-                // Calculate scroll position to align section with breakpoint
-                const scrollPos = section.offsetTop - breakpointViewportPos;
+                // Calculate scroll position to align section CENTER with breakpoint using getBoundingClientRect()
+                const sectionRect = section.getBoundingClientRect();
+                const sectionCenter = sectionRect.top + sectionRect.height / 2;
+                const scrollPos = window.scrollY + sectionCenter - breakpointViewportPos;
 
                 // Immediately highlight the target section (ignore breakpoint)
                 const paragraphs = element.querySelectorAll(searchfor);
