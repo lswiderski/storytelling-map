@@ -10,7 +10,7 @@ function StoryMap(options) {
         markerClickScrollToPlace: true, // Enable marker click to navigate and highlight sections
         createMap: function () {
             // Create a map in the "map" div, set the view to a given place and zoom
-            const map = L.map('map').setView([65, 18], 5);
+            const map = L.map(options.mapContainer ?? 'map').setView([65, 18], 5);
 
             // Add an OpenStreetMap tile layer
             L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
