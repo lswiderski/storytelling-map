@@ -35,6 +35,26 @@ function StoryMap(options) {
     let pathsLayerGroup = null;
     let markerFeatureGroup = null;
 
+    function parseMarkersFromElements(element) {
+        const markers = {};
+        const elements = element.querySelectorAll(settings.selector);
+
+        Array.from(elements).forEach(function (el) {
+            const place = el.dataset.place;
+            const lat = el.dataset.lat;
+            const lon = el.dataset.lon;
+            if (place && lat && lon) {
+                markers[place] = {
+                    lat: parseFloat(el.dataset.lat),
+                    lon: parseFloat(el.dataset.lon),
+                    zoom: el.dataset.zoom ? parseInt(el.dataset.zoom) : 10
+                };
+            }
+        });
+
+        return markers;
+    }
+
     function getDistanceToTop(elem, breakpointElement) {
         // Use getBoundingClientRect() to get viewport position, then add scrollY for absolute page position
         const elemRect = elem.getBoundingClientRect();
@@ -346,7 +366,12 @@ function StoryMap(options) {
         }
     }
 
-    makeStoryMap(document.querySelector(settings.container), settings.markers);
+    const containerElement = document.querySelector(settings.container);
+    // Combine markers from both sources: elements first, then override with provided markers
+    const markersFromElements = parseMarkersFromElements(containerElement);
+    const markers = { ...markersFromElements, ...settings.markers };
+
+    makeStoryMap(containerElement, markers);
 
     // Return public methods if needed
     return {
