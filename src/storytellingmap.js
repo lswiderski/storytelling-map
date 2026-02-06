@@ -49,10 +49,63 @@ function StoryMap(options) {
                     lon: parseFloat(el.dataset.lon),
                     zoom: el.dataset.zoom ? parseInt(el.dataset.zoom) : 10
                 };
+                // Add createPathToNext property if present
+                if (el.dataset.createPathToNext !== undefined) {
+                    markers[place].createPathToNext = el.dataset.createPathToNext === 'true';
+                }
+                // Add marker tooltip if present
+                if (el.dataset.tooltip) {
+                    markers[place].tooltip = el.dataset.tooltip;
+                }
+                // Add marker popup if present
+                if (el.dataset.popup) {
+                    markers[place].popup = el.dataset.popup;
+                }
+                // Add path tooltip if present
+                if (el.dataset.pathTooltip) {
+                    markers[place].pathTooltip = el.dataset.pathTooltip;
+                }
+                // Add path popup if present
+                if (el.dataset.pathPopup) {
+                    markers[place].pathPopup = el.dataset.pathPopup;
+                }
             }
         });
 
         return markers;
+    }
+
+    function generateAutoPathsFromMarkers(markers) {
+        const markerKeys = Object.keys(markers);
+        const autoPaths = [];
+
+        for (let i = 0; i < markerKeys.length - 1; i++) {
+            const currentKey = markerKeys[i];
+            const nextKey = markerKeys[i + 1];
+            const currentMarker = markers[currentKey];
+
+            // Create path to next marker if createPathToNext is true
+            if (currentMarker.createPathToNext) {
+                const pathObj = {
+                    from: currentKey,
+                    to: nextKey
+                };
+
+                // Add path tooltip if present
+                if (currentMarker.pathTooltip) {
+                    pathObj.tooltip = currentMarker.pathTooltip;
+                }
+
+                // Add path popup if present
+                if (currentMarker.pathPopup) {
+                    pathObj.popup = currentMarker.pathPopup;
+                }
+
+                autoPaths.push(pathObj);
+            }
+        }
+
+        return autoPaths;
     }
 
     function getDistanceToTop(elem, breakpointElement) {
@@ -192,14 +245,20 @@ function StoryMap(options) {
             map.removeLayer(pathsLayerGroup);
         }
 
+        // Generate auto paths from markers with createPathToNext property
+        const autoPaths = generateAutoPathsFromMarkers(markers);
+
+        // Combine auto paths with manually specified paths
+        const allPaths = [...autoPaths, ...(paths || [])];
+
         // If no paths, return null
-        if (!paths || paths.length === 0) return null;
+        if (!allPaths || allPaths.length === 0) return null;
 
         // Create a feature group for all paths
         const layerGroup = L.featureGroup().addTo(map);
 
         // Create each path
-        paths.forEach(path => {
+        allPaths.forEach(path => {
             if (!path.from || !path.to || !markers[path.from] || !markers[path.to]) {
                 console.warn('Invalid path configuration:', path);
                 return;
@@ -275,6 +334,16 @@ function StoryMap(options) {
                     const marker = markers[markerKey];
                     const leafletMarker = L.marker([marker.lat, marker.lon]).addTo(markerFeatureGroup);
 
+                    // Add tooltip if present
+                    if (marker.tooltip) {
+                        leafletMarker.bindTooltip(marker.tooltip);
+                    }
+
+                    // Add popup if present
+                    if (marker.popup) {
+                        leafletMarker.bindPopup(marker.popup);
+                    }
+
                     // Add click event to navigate to section if markerClickScrollToPlace is enabled
                     if (settings.markerClickScrollToPlace) {
                         leafletMarker.on('click', function () {
@@ -295,6 +364,16 @@ function StoryMap(options) {
                 Object.keys(markers).forEach(markerKey => {
                     const m = markers[markerKey];
                     const leafletMarker = L.marker([m.lat, m.lon]).addTo(markerFeatureGroup);
+
+                    // Add tooltip if present
+                    if (m.tooltip) {
+                        leafletMarker.bindTooltip(m.tooltip);
+                    }
+
+                    // Add popup if present
+                    if (m.popup) {
+                        leafletMarker.bindPopup(m.popup);
+                    }
 
                     // Add click event to navigate to section if markerClickScrollToPlace is enabled
                     if (settings.markerClickScrollToPlace) {
@@ -367,9 +446,18 @@ function StoryMap(options) {
     }
 
     const containerElement = document.querySelector(settings.container);
-    // Combine markers from both sources: elements first, then override with provided markers
+    // Combine markers from both sources: maintain HTML element order as primary
     const markersFromElements = parseMarkersFromElements(containerElement);
-    const markers = { ...markersFromElements, ...settings.markers };
+    const markers = { ...markersFromElements };
+
+    // Add any markers from settings.markers that don't already exist from elements
+    if (settings.markers) {
+        Object.keys(settings.markers).forEach(function (key) {
+            if (!markers[key]) {
+                markers[key] = settings.markers[key];
+            }
+        });
+    }
 
     makeStoryMap(containerElement, markers);
 

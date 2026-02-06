@@ -188,6 +188,11 @@
             data-lat="59.92173"
             data-lon="10.75719"
             data-zoom="7"
+            data-create-path-to-next="true"
+            data-tooltip="Oslo - Capital of Norway"
+            data-popup="More info about Oslo"
+            data-path-tooltip="Route to Trondheim"
+            data-path-popup="Distance: ~500km"
           >
             oslo
           </h1>
@@ -560,34 +565,40 @@
         'use strict';
 
         var markers = {
-          trondheim: {
-            lat: 63.4319,
-            lon: 10.3988,
-            zoom: 7,
-          },
-          bergen: {
-            lat: 60.3992,
-            lon: 5.3227,
-            zoom: 7,
-          },
-          tromso: {
-            lat: 69.632,
-            lon: 18.9197,
-            zoom: 7,
-          },
           kristiansand: {
             lat: 58.17993,
             lon: 8.12952,
             zoom: 9,
+            createPathToNext: true,
+            tooltip: 'Kristiansand',
+            popup: 'Info about Kristiansand',
+            pathTooltip: 'Route to next city',
+            pathPopup: 'Path information',
           },
           stavanger: {
             lat: 58.9694,
             lon: 5.73,
             zoom: 9,
           },
+
+          bergen: {
+            lat: 60.3992,
+            lon: 5.3227,
+            zoom: 7,
+          },
+          trondheim: {
+            lat: 63.4319,
+            lon: 10.3988,
+            zoom: 7,
+          },
           bodo: {
             lat: 67.28319,
             lon: 14.38565,
+            zoom: 7,
+          },
+          tromso: {
+            lat: 69.632,
+            lon: 18.9197,
             zoom: 7,
           },
         };
