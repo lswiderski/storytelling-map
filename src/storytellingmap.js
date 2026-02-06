@@ -69,6 +69,14 @@ function StoryMap(options) {
                 if (el.dataset.pathPopup) {
                     markers[place].pathPopup = el.dataset.pathPopup;
                 }
+                // Add path curved property if present
+                if (el.dataset.curved !== undefined) {
+                    markers[place].curved = el.dataset.curved !== 'false';
+                }
+                // Add path curve direction if present
+                if (el.dataset.curveDirection) {
+                    markers[place].curveDirection = el.dataset.curveDirection;
+                }
             }
         });
 
@@ -99,6 +107,16 @@ function StoryMap(options) {
                 // Add path popup if present
                 if (currentMarker.pathPopup) {
                     pathObj.popup = currentMarker.pathPopup;
+                }
+
+                // Add path curved property if present
+                if (currentMarker.curved !== undefined) {
+                    pathObj.curved = currentMarker.curved;
+                }
+
+                // Add path curve direction if present
+                if (currentMarker.curveDirection) {
+                    pathObj.curveDirection = currentMarker.curveDirection;
                 }
 
                 autoPaths.push(pathObj);
@@ -238,6 +256,49 @@ function StoryMap(options) {
         }
     }
 
+    // Function to calculate intermediate points for curved paths
+    function calculateCurvedPath(fromLat, fromLon, toLat, toLon, curveAmount = 0.05, direction = 'right') {
+        const points = [];
+        const steps = 50; // Number of points to create smooth curve
+
+        // Add start point
+        points.push([fromLat, fromLon]);
+
+        // Calculate midpoint
+        const midLat = (fromLat + toLat) / 2;
+        const midLon = (fromLon + toLon) / 2;
+
+        // Calculate distance between points
+        const dLat = toLat - fromLat;
+        const dLon = toLon - fromLon;
+
+        // Calculate perpendicular offset for curve (creates arc)
+        const distance = Math.sqrt(dLat * dLat + dLon * dLon);
+        let perpLat = dLon / distance;
+        let perpLon = -dLat / distance;
+
+        // Reverse perpendicular if direction is 'left'
+        if (direction === 'left') {
+            perpLat = -perpLat;
+            perpLon = -perpLon;
+        }
+
+        // Create curved path using bezier-like curve
+        for (let i = 1; i < steps; i++) {
+            const t = i / steps;
+            // Quadratic bezier formula with control point offset
+            const offsetDistance = Math.sin(t * Math.PI) * distance * curveAmount;
+            const curvedLat = fromLat + dLat * t + perpLat * offsetDistance;
+            const curvedLon = fromLon + dLon * t + perpLon * offsetDistance;
+            points.push([curvedLat, curvedLon]);
+        }
+
+        // Add end point
+        points.push([toLat, toLon]);
+
+        return points;
+    }
+
     // Function to create paths between markers
     function createPaths(map, markers, paths) {
         // Clear any existing paths
@@ -267,11 +328,28 @@ function StoryMap(options) {
             const fromMarker = markers[path.from];
             const toMarker = markers[path.to];
 
-            // Ensure coordinates are in the correct format [lat, lng]
-            const latlngs = [
-                [fromMarker.lat, fromMarker.lon],
-                [toMarker.lat, toMarker.lon]
-            ];
+            // Determine if path should be curved
+            const isCurved = path.curved !== false; // Default to true unless explicitly set to false
+            const curveDirection = path.curveDirection || 'right'; // Default direction is right
+
+            // Calculate path coordinates
+            let latlngs;
+            if (isCurved) {
+                latlngs = calculateCurvedPath(
+                    fromMarker.lat,
+                    fromMarker.lon,
+                    toMarker.lat,
+                    toMarker.lon,
+                    0.05,
+                    curveDirection
+                );
+            } else {
+                // Straight path
+                latlngs = [
+                    [fromMarker.lat, fromMarker.lon],
+                    [toMarker.lat, toMarker.lon]
+                ];
+            }
 
             // Use custom path options if provided, otherwise use default
             const pathOptions = { ...settings.pathOptions, ...(path.options || {}) };
