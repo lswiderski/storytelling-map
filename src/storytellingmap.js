@@ -44,22 +44,58 @@ function StoryMap(options) {
         const breakpointViewportPos = window.innerHeight * parseFloat(settings.breakpointPos) / 100;
         const breakpointPagePos = window.scrollY + breakpointViewportPos;
 
-        // Calculate absolute distance from element center to breakpoint
-        return Math.abs(elemCenter - breakpointPagePos);
+        // Return distance and whether element is above breakpoint
+        return {
+            distance: elemCenter - breakpointPagePos,
+            isAbove: elemCenter < breakpointPagePos
+        };
     }
 
     function highlightTopPara(paragraphs, breakpointElement) {
         const paragraphsArray = Array.from(paragraphs); // Convert NodeList to array
 
-        // Always find the section closest to the breakpoint-current line
-        const distances = paragraphsArray.map(function (element) {
-            const dist = getDistanceToTop(element, breakpointElement);
-            return { el: element, distance: dist };
+        // Calculate positions for each section
+        const sectionData = paragraphsArray.map(function (element) {
+            const distObj = getDistanceToTop(element, breakpointElement);
+            const elemRect = element.getBoundingClientRect();
+            const elemTop = window.scrollY + elemRect.top;
+            const elemBottom = window.scrollY + elemRect.top + elemRect.height;
+
+            const breakpointViewportPos = window.innerHeight * parseFloat(settings.breakpointPos) / 100;
+            const breakpointPagePos = window.scrollY + breakpointViewportPos;
+            const containsBreakpoint = breakpointPagePos >= elemTop && breakpointPagePos <= elemBottom;
+
+            return {
+                el: element,
+                distance: distObj.distance,
+                isAbove: distObj.isAbove,
+                containsBreakpoint: containsBreakpoint
+            };
         });
 
-        const closest = distances.reduce((min, current) => {
-            return current.distance < min.distance ? current : min;
-        }, distances[0]);
+        // Priority 1: Find sections that contain the breakpoint
+        const containingSections = sectionData.filter(function (item) {
+            return item.containsBreakpoint;
+        });
+
+        let closest;
+        if (containingSections.length > 0) {
+            closest = containingSections[0];
+        } else {
+            // Priority 2: If no sections contain the breakpoint, find sections above and select the closest one
+            const aboveSections = sectionData.filter(function (item) {
+                return item.isAbove;
+            });
+            if (aboveSections.length > 0) {
+                // Select the closest one above (maximum distance, least negative)
+                closest = aboveSections.reduce((max, current) => {
+                    return current.distance > max.distance ? current : max;
+                }, aboveSections[0]);
+            } else {
+                // Fallback: use the first section
+                closest = sectionData[0];
+            }
+        }
 
         paragraphsArray.forEach(function (element) {
             if (element !== closest.el) {
