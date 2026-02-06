@@ -36,8 +36,9 @@ function StoryMap(options) {
     let markerFeatureGroup = null;
 
     function getDistanceToTop(elem, breakpointElement) {
-        const elemTop = elem.offsetTop;
-        const elemCenter = elemTop + elem.offsetHeight / 2;
+        // Use getBoundingClientRect() to get viewport position, then add scrollY for absolute page position
+        const elemRect = elem.getBoundingClientRect();
+        const elemCenter = window.scrollY + elemRect.top + elemRect.height / 2;
 
         // Get breakpoint position - it's fixed to viewport at breakpointPos percentage
         const breakpointViewportPos = window.innerHeight * parseFloat(settings.breakpointPos) / 100;
