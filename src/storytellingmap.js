@@ -81,6 +81,22 @@ function StoryMap(options) {
                 if (el.dataset.hidden !== undefined) {
                     markers[place].hidden = el.dataset.hidden === 'true';
                 }
+                // Add marker color if present
+                if (el.dataset.markerColor) {
+                    markers[place].markerColor = el.dataset.markerColor;
+                }
+                // Add marker icon URL if present
+                if (el.dataset.markerIcon) {
+                    markers[place].markerIcon = el.dataset.markerIcon;
+                }
+                // Add marker icon size if present
+                if (el.dataset.markerIconSize) {
+                    try {
+                        markers[place].markerIconSize = JSON.parse(el.dataset.markerIconSize);
+                    } catch (e) {
+                        console.warn('Invalid markerIconSize format:', el.dataset.markerIconSize);
+                    }
+                }
             }
         });
 
@@ -269,6 +285,50 @@ function StoryMap(options) {
         });
     }
 
+    // Function to create a colored marker icon
+    function createColoredIcon(color = '#FF0000') {
+        // Validate color format
+        const validColor = /^#[0-9A-F]{6}$/i.test(color) ? color : '#FF0000';
+
+        return L.divIcon({
+            html: `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 2C10.48 2 6 6.48 6 12c0 7 10 18 10 18s10-11 10-18c0-5.52-4.48-10-10-10z" 
+                          fill="${validColor}" stroke="white" stroke-width="2"/>
+                    <circle cx="16" cy="12" r="4" fill="white"/>
+                   </svg>`,
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32],
+            className: 'colored-marker-icon'
+        });
+    }
+
+    // Function to create a custom marker icon from URL
+    function createCustomIcon(iconUrl, size = [32, 32]) {
+        return L.icon({
+            iconUrl: iconUrl,
+            iconSize: size,
+            iconAnchor: [size[0] / 2, size[1]],
+            popupAnchor: [0, -size[1]]
+        });
+    }
+
+    // Function to get marker icon based on configuration
+    function getMarkerIcon(marker) {
+        if (marker.hidden) {
+            return createInvisibleIcon();
+        } else if (marker.markerIcon) {
+            // Custom icon URL
+            const size = marker.markerIconSize || [32, 32];
+            return createCustomIcon(marker.markerIcon, size);
+        } else if (marker.markerColor) {
+            // Colored marker
+            return createColoredIcon(marker.markerColor);
+        }
+        // Default Leaflet marker
+        return undefined;
+    }
+
     // Function to calculate intermediate points for curved paths
     function calculateCurvedPath(fromLat, fromLon, toLat, toLon, curveAmount = 0.05, direction = 'right') {
         const points = [];
@@ -423,7 +483,8 @@ function StoryMap(options) {
                 // Show all markers in overview mode
                 Object.keys(markers).forEach(markerKey => {
                     const marker = markers[markerKey];
-                    const markerOptions = marker.hidden ? { icon: createInvisibleIcon() } : {};
+                    const markerIcon = getMarkerIcon(marker);
+                    const markerOptions = markerIcon ? { icon: markerIcon } : {};
                     const leafletMarker = L.marker([marker.lat, marker.lon], markerOptions).addTo(markerFeatureGroup);
 
                     // Add tooltip if present
@@ -455,7 +516,8 @@ function StoryMap(options) {
                 // Show all markers
                 Object.keys(markers).forEach(markerKey => {
                     const m = markers[markerKey];
-                    const markerOptions = m.hidden ? { icon: createInvisibleIcon() } : {};
+                    const markerIcon = getMarkerIcon(m);
+                    const markerOptions = markerIcon ? { icon: markerIcon } : {};
                     const leafletMarker = L.marker([m.lat, m.lon], markerOptions).addTo(markerFeatureGroup);
 
                     // Add tooltip if present

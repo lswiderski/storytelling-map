@@ -34,6 +34,9 @@ Each section with `data-place` must have location data:
   data-tooltip="Oslo"           <!-- Marker tooltip -->
   data-popup="Capital of Norway" <!-- Marker popup -->
   data-hidden="true"            <!-- Hide marker (invisible on map, optional, default: false) -->
+  data-marker-color="#FF0000"   <!-- Marker pin color in hex format (optional) -->
+  data-marker-icon="path/to/icon.png" <!-- Custom marker icon URL (optional) -->
+  data-marker-icon-size="[32,32]" <!-- Custom icon size [width,height] (optional) -->
   data-create-path-to-next      <!-- Auto-create path to next marker -->
   data-curved="true"            <!-- Enable curved paths (optional, default: true) -->
   data-curve-direction="right"  <!-- Path curve direction: 'left' or 'right' (optional, default: 'right') -->
@@ -81,6 +84,9 @@ StoryMap({
       tooltip: 'Oslo',           // Marker tooltip
       popup: 'Capital',          // Marker popup
       hidden: false,             // Hide marker on map (optional, default: false)
+      markerColor: '#FF0000',    // Marker color in hex format (optional)
+      markerIcon: undefined,     // Custom marker icon URL (optional)
+      markerIconSize: [32, 32],  // Custom icon size [width, height] (optional, default: [32, 32])
       createPathToNext: true,    // Auto-create path to next marker
       curved: true,              // Enable curved path (optional)
       curveDirection: 'right'    // 'left' or 'right' (optional)
@@ -168,6 +174,61 @@ Hidden markers:
 - Remain clickable if `markerClickScrollToPlace` is enabled
 - Can have tooltips and popups (though invisible, they're still interactive on hover)
 - Still work with paths if connected to other markers
+
+### Marker Styling
+
+Customize marker appearance with colors or custom icons.
+
+**Colored Markers**
+Use hex color codes to change marker pin colors:
+
+```html
+<section data-place="oslo" data-lat="59.92" data-lon="10.75" 
+         data-marker-color="#FF0000">
+  <h2>Red Pin</h2>
+</section>
+
+<section data-place="bergen" data-lat="60.39" data-lon="5.32" 
+         data-marker-color="#0000FF">
+  <h2>Blue Pin</h2>
+</section>
+```
+
+Or with JavaScript:
+```javascript
+markers: {
+  oslo: { lat: 59.92, lon: 10.75, markerColor: '#FF0000' },
+  bergen: { lat: 60.39, lon: 5.32, markerColor: '#0000FF' }
+}
+```
+
+**Custom Icon Images**
+Use custom icon URLs:
+
+```html
+<section data-place="oslo" data-lat="59.92" data-lon="10.75" 
+         data-marker-icon="path/to/custom-icon.png">
+  <h2>Custom Icon Location</h2>
+</section>
+```
+
+Or with JavaScript:
+```javascript
+markers: {
+  oslo: { 
+    lat: 59.92, 
+    lon: 10.75, 
+    markerIcon: 'path/to/custom-icon.png',
+    markerIconSize: [32, 32]  // Optional: customize icon size
+  }
+}
+```
+
+Marker styling priority:
+1. **Hidden markers** - Use invisible icons (if `hidden: true`)
+2. **Custom icons** - Display custom image (if `markerIcon` is set)
+3. **Colored markers** - Display colored pin (if `markerColor` is set)
+4. **Default** - Use Leaflet's default marker
 
 ### Path Features
 
