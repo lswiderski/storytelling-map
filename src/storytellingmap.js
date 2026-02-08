@@ -77,6 +77,10 @@ function StoryMap(options) {
                 if (el.dataset.curveDirection) {
                     markers[place].curveDirection = el.dataset.curveDirection;
                 }
+                // Add hidden property if present
+                if (el.dataset.hidden !== undefined) {
+                    markers[place].hidden = el.dataset.hidden === 'true';
+                }
             }
         });
 
@@ -256,6 +260,15 @@ function StoryMap(options) {
         }
     }
 
+    // Function to create an invisible marker icon
+    function createInvisibleIcon() {
+        return L.divIcon({
+            html: '',
+            iconSize: [0, 0],
+            className: 'hidden-marker-icon'
+        });
+    }
+
     // Function to calculate intermediate points for curved paths
     function calculateCurvedPath(fromLat, fromLon, toLat, toLon, curveAmount = 0.05, direction = 'right') {
         const points = [];
@@ -410,7 +423,8 @@ function StoryMap(options) {
                 // Show all markers in overview mode
                 Object.keys(markers).forEach(markerKey => {
                     const marker = markers[markerKey];
-                    const leafletMarker = L.marker([marker.lat, marker.lon]).addTo(markerFeatureGroup);
+                    const markerOptions = marker.hidden ? { icon: createInvisibleIcon() } : {};
+                    const leafletMarker = L.marker([marker.lat, marker.lon], markerOptions).addTo(markerFeatureGroup);
 
                     // Add tooltip if present
                     if (marker.tooltip) {
@@ -441,7 +455,8 @@ function StoryMap(options) {
                 // Show all markers
                 Object.keys(markers).forEach(markerKey => {
                     const m = markers[markerKey];
-                    const leafletMarker = L.marker([m.lat, m.lon]).addTo(markerFeatureGroup);
+                    const markerOptions = m.hidden ? { icon: createInvisibleIcon() } : {};
+                    const leafletMarker = L.marker([m.lat, m.lon], markerOptions).addTo(markerFeatureGroup);
 
                     // Add tooltip if present
                     if (m.tooltip) {

@@ -33,6 +33,7 @@ Each section with `data-place` must have location data:
   data-zoom="7"                 <!-- Zoom level (optional, default: 10) -->
   data-tooltip="Oslo"           <!-- Marker tooltip -->
   data-popup="Capital of Norway" <!-- Marker popup -->
+  data-hidden="true"            <!-- Hide marker (invisible on map, optional, default: false) -->
   data-create-path-to-next      <!-- Auto-create path to next marker -->
   data-curved="true"            <!-- Enable curved paths (optional, default: true) -->
   data-curve-direction="right"  <!-- Path curve direction: 'left' or 'right' (optional, default: 'right') -->
@@ -79,6 +80,7 @@ StoryMap({
       zoom: 7,                   // Optional zoom on marker select
       tooltip: 'Oslo',           // Marker tooltip
       popup: 'Capital',          // Marker popup
+      hidden: false,             // Hide marker on map (optional, default: false)
       createPathToNext: true,    // Auto-create path to next marker
       curved: true,              // Enable curved path (optional)
       curveDirection: 'right'    // 'left' or 'right' (optional)
@@ -135,6 +137,37 @@ markers: {
 
 **3. Mixed Approach**
 Combine both - HTML attributes are parsed first, then merged with markers object. Markers object takes precedence.
+
+### Hidden Markers
+
+Hide a marker on the map while keeping it as a functional navigation point:
+
+**Using HTML Attributes**
+```html
+<section data-place="hidden-location" data-lat="59.92" data-lon="10.75" data-hidden="true">
+  <h2>Hidden Location</h2>
+  <p>This marker won't show as a pin on the map...</p>
+</section>
+```
+
+**Using JavaScript Markers Object**
+```javascript
+markers: {
+  hiddenLocation: { 
+    lat: 59.92, 
+    lon: 10.75,
+    hidden: true,
+    tooltip: "This won't be visible"
+  }
+}
+```
+
+Hidden markers:
+- Don't render as visible pins on the map
+- Still trigger fly-to animations during scrolling
+- Remain clickable if `markerClickScrollToPlace` is enabled
+- Can have tooltips and popups (though invisible, they're still interactive on hover)
+- Still work with paths if connected to other markers
 
 ### Path Features
 
