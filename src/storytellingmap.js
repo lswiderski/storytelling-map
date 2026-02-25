@@ -97,6 +97,20 @@ function StoryMap(options) {
                         console.warn('Invalid markerIconSize format:', el.dataset.markerIconSize);
                     }
                 }
+                // Add min zoom if present
+                if (el.dataset.minZoom !== undefined) {
+                    const parsedMinZoom = parseInt(el.dataset.minZoom, 10);
+                    if (!Number.isNaN(parsedMinZoom)) {
+                        markers[place].minZoom = parsedMinZoom;
+                    }
+                }
+                // Add max zoom if present
+                if (el.dataset.maxZoom !== undefined) {
+                    const parsedMaxZoom = parseInt(el.dataset.maxZoom, 10);
+                    if (!Number.isNaN(parsedMaxZoom)) {
+                        markers[place].maxZoom = parsedMaxZoom;
+                    }
+                }
             }
         });
 
@@ -276,15 +290,6 @@ function StoryMap(options) {
         }
     }
 
-    // Function to create an invisible marker icon
-    function createInvisibleIcon() {
-        return L.divIcon({
-            html: '',
-            iconSize: [0, 0],
-            className: 'hidden-marker-icon'
-        });
-    }
-
     // Function to create a colored marker icon
     function createColoredIcon(color = '#FF0000') {
         // Validate color format
@@ -315,9 +320,7 @@ function StoryMap(options) {
 
     // Function to get marker icon based on configuration
     function getMarkerIcon(marker) {
-        if (marker.hidden) {
-            return createInvisibleIcon();
-        } else if (marker.markerIcon) {
+        if (marker.markerIcon) {
             // Custom icon URL
             const size = marker.markerIconSize || [32, 32];
             return createCustomIcon(marker.markerIcon, size);
@@ -327,6 +330,23 @@ function StoryMap(options) {
         }
         // Default Leaflet marker
         return undefined;
+    }
+
+    // Function to decide if marker should be rendered at current zoom
+    function shouldRenderMarker(marker, currentZoom) {
+        if (marker.hidden) {
+            return false;
+        }
+
+        if (marker.minZoom !== undefined && currentZoom < marker.minZoom) {
+            return false;
+        }
+
+        if (marker.maxZoom !== undefined && currentZoom > marker.maxZoom) {
+            return false;
+        }
+
+        return true;
     }
 
     // Function to calculate intermediate points for curved paths
@@ -474,15 +494,26 @@ function StoryMap(options) {
         // Create paths between markers
         pathsLayerGroup = createPaths(map, markers, settings.paths);
 
-        function showMapView(key) {
+        let currentViewKey = 'overview';
+
+        function showMapView(key, viewOptions = {}) {
+            const { skipFlyTo = false } = viewOptions;
+            currentViewKey = key;
             markerFeatureGroup.clearLayers();
+            const currentZoom = map.getZoom();
 
             if (key === 'overview') {
-                map.flyTo(initPoint, initZoom, { animate: true, duration: 1.5 });
+                if (!skipFlyTo) {
+                    map.flyTo(initPoint, initZoom, { animate: true, duration: 1.5 });
+                }
 
                 // Show all markers in overview mode
                 Object.keys(markers).forEach(markerKey => {
                     const marker = markers[markerKey];
+                    if (!shouldRenderMarker(marker, currentZoom)) {
+                        return;
+                    }
+
                     const markerIcon = getMarkerIcon(marker);
                     const markerOptions = markerIcon ? { icon: markerIcon } : {};
                     const leafletMarker = L.marker([marker.lat, marker.lon], markerOptions).addTo(markerFeatureGroup);
@@ -516,6 +547,10 @@ function StoryMap(options) {
                 // Show all markers
                 Object.keys(markers).forEach(markerKey => {
                     const m = markers[markerKey];
+                    if (!shouldRenderMarker(m, currentZoom)) {
+                        return;
+                    }
+
                     const markerIcon = getMarkerIcon(m);
                     const markerOptions = markerIcon ? { icon: markerIcon } : {};
                     const leafletMarker = L.marker([m.lat, m.lon], markerOptions).addTo(markerFeatureGroup);
@@ -540,7 +575,9 @@ function StoryMap(options) {
                 });
 
                 // Zoom to the selected marker
-                map.flyTo([marker.lat, marker.lon], marker.zoom || 10, { animate: true, duration: 1.5 });
+                if (!skipFlyTo) {
+                    map.flyTo([marker.lat, marker.lon], marker.zoom || 10, { animate: true, duration: 1.5 });
+                }
 
                 // Make sure paths are visible
                 if (pathsLayerGroup) {
@@ -548,6 +585,10 @@ function StoryMap(options) {
                 }
             }
         }
+
+        map.on('zoomend', function () {
+            showMapView(currentViewKey, { skipFlyTo: true });
+        });
 
         function scrollToAndHighlightSection(dataPlace) {
             const section = element.querySelector(`[data-place="${dataPlace}"]`);

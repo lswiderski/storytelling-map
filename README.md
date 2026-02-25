@@ -37,6 +37,8 @@ Each section with `data-place` must have location data:
   data-marker-color="#FF0000"   <!-- Marker pin color in hex format (optional) -->
   data-marker-icon="path/to/icon.png" <!-- Custom marker icon URL (optional) -->
   data-marker-icon-size="[32,32]" <!-- Custom icon size [width,height] (optional) -->
+  data-min-zoom="6"             <!-- Show marker only when zoom >= 6 (optional) -->
+  data-max-zoom="12"            <!-- Show marker only when zoom <= 12 (optional) -->
   data-create-path-to-next      <!-- Auto-create path to next marker -->
   data-curved="true"            <!-- Enable curved paths (optional, default: true) -->
   data-curve-direction="right"  <!-- Path curve direction: 'left' or 'right' (optional, default: 'right') -->
@@ -87,6 +89,8 @@ StoryMap({
       markerColor: '#FF0000',    // Marker color in hex format (optional)
       markerIcon: undefined,     // Custom marker icon URL (optional)
       markerIconSize: [32, 32],  // Custom icon size [width, height] (optional, default: [32, 32])
+      minZoom: 6,                // Show marker only when zoom >= 6 (optional)
+      maxZoom: 12,               // Show marker only when zoom <= 12 (optional)
       createPathToNext: true,    // Auto-create path to next marker
       curved: true,              // Enable curved path (optional)
       curveDirection: 'right'    // 'left' or 'right' (optional)
@@ -169,11 +173,31 @@ markers: {
 ```
 
 Hidden markers:
-- Don't render as visible pins on the map
+- Are not rendered on the map at all
 - Still trigger fly-to animations during scrolling
-- Remain clickable if `markerClickScrollToPlace` is enabled
-- Can have tooltips and popups (though invisible, they're still interactive on hover)
 - Still work with paths if connected to other markers
+
+### Zoom-Based Marker Visibility
+
+Show or hide markers by zoom level:
+
+- `minZoom`: marker renders only when current zoom is greater than or equal to this value
+- `maxZoom`: marker renders only when current zoom is less than or equal to this value
+- Combine both to render a marker only within a zoom range
+
+**HTML attributes**
+```html
+<section data-place="city" data-lat="59.92" data-lon="10.75" data-min-zoom="8" data-max-zoom="12">
+  <h2>City level marker</h2>
+</section>
+```
+
+**JavaScript markers object**
+```javascript
+markers: {
+  city: { lat: 59.92, lon: 10.75, minZoom: 8, maxZoom: 12 }
+}
+```
 
 ### Marker Styling
 
