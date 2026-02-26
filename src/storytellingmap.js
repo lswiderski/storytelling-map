@@ -4,6 +4,118 @@ if (typeof L === 'undefined') {
 }
 
 function StoryMap(options) {
+    function normalizeTrigger(value) {
+        if (value === 'scroll' || value === 'mouseover' || value === 'both') {
+            return value;
+        }
+        return 'scroll';
+    }
+
+    function normalizeBreakpointPos(value) {
+        const parsed = parseFloat(value);
+        if (Number.isNaN(parsed)) {
+            return '33.333%';
+        }
+
+        const clamped = Math.max(0, Math.min(100, parsed));
+        return `${clamped}%`;
+    }
+
+    function hasScrollTrigger(trigger) {
+        return trigger === 'scroll' || trigger === 'both';
+    }
+
+    function hasMouseoverTrigger(trigger) {
+        return trigger === 'mouseover' || trigger === 'both';
+    }
+
+    function ensureControlPanelStyles() {
+        const styleId = 'storymap-control-panel-styles';
+        if (document.getElementById(styleId)) {
+            return;
+        }
+
+        const style = document.createElement('style');
+        style.id = styleId;
+        style.textContent = `
+            .storymap-settings-control.leaflet-control {
+                border:none;
+            }
+            .storymap-settings-control {
+                margin-left: 44px;
+            }
+
+            .storymap-settings-wrap {
+                display: flex;
+                align-items: flex-start;
+                gap: 6px;
+            }
+
+            .storymap-settings-toggle {
+                width: 32px;
+                height: 32px;
+                line-height: 30px;
+                text-align: center;
+                border: none;
+                background: #fff;
+                cursor: pointer;
+                font-size: 16px;
+            }
+
+            .storymap-settings-toggle.storymap-active {
+                background: #f4f4f4;
+            }
+
+            .storymap-settings-panel {
+                background: #fff;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                padding: 8px;
+                min-width: 220px;
+            }
+
+            .storymap-settings-panel[hidden] {
+                display: none;
+            }
+
+            .storymap-settings-panel label {
+                display: block;
+                font-size: 12px;
+                margin-bottom: 8px;
+                font-weight: 600;
+            }
+
+            .storymap-settings-panel select,
+            .storymap-settings-panel input[type="number"] {
+                display: block;
+                width: 100%;
+                margin-top: 4px;
+                height: 30px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                padding: 4px 6px;
+                font-size: 12px;
+                font-weight: normal;
+            }
+
+            .storymap-settings-panel .storymap-settings-checkbox {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                margin-top: 8px;
+                margin-bottom: 0;
+                font-weight: normal;
+                font-size: 12px;
+            }
+
+            .storymap-settings-panel .storymap-settings-checkbox input {
+                margin: 0;
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+
     const defaults = {
         selector: '[data-place]',
         breakpointPos: '33.333%',
@@ -19,7 +131,9 @@ function StoryMap(options) {
 
             return map;
         },
-        trigger: 'scroll', // Default trigger is scroll
+        trigger: 'scroll',  // 'scroll', 'mouseover', or 'both' (default: 'scroll')
+        showControlPanel: false,
+        controlPanelExpanded: false,
         paths: [], // Default empty paths array
         pathOptions: {
             color: 'red',
@@ -29,6 +143,10 @@ function StoryMap(options) {
     };
 
     const settings = { ...defaults, ...options };
+    settings.trigger = normalizeTrigger(settings.trigger);
+    settings.breakpointPos = normalizeBreakpointPos(settings.breakpointPos);
+    settings.showControlPanel = Boolean(settings.showControlPanel);
+    settings.controlPanelExpanded = Boolean(settings.controlPanelExpanded);
 
     let isScrolling = false;
     let isMarkerNavigation = false; // Flag to track when user clicks a marker
@@ -235,6 +353,12 @@ function StoryMap(options) {
 
     function watchHighlight(element, searchfor, breakpointElement) {
         const paragraphs = element.querySelectorAll(searchfor);
+        const triggerIncludesMouseover = function () {
+            return hasMouseoverTrigger(settings.trigger);
+        };
+        const triggerIncludesScroll = function () {
+            return hasScrollTrigger(settings.trigger);
+        };
 
         Array.from(paragraphs).forEach(function (paragraph) {
             paragraph.addEventListener('viewing', function () {
@@ -245,47 +369,58 @@ function StoryMap(options) {
                 paragraph.classList.remove('viewing');
             });
 
-            if (settings.trigger === 'mouseover' || settings.trigger === 'both') {
-                // Add mouseover event listener
-                paragraph.addEventListener('mouseover', function () {
-                    if (!isScrolling) {
-                        Array.from(paragraphs).forEach(function (p) {
-                            if (p !== paragraph) {
-                                p.dispatchEvent(new CustomEvent('notviewing'));
-                            }
-                        });
-                        if (!paragraph.classList.contains('viewing')) {
-                            paragraph.dispatchEvent(new CustomEvent('viewing'));
-                        }
-                    }
-                });
-
-                // Add mouseout event listener to reset on scroll
-                paragraph.addEventListener('mouseout', function () {
-                    // Reset on scroll if not currently hovered
-                    window.addEventListener('scroll', function resetOnScroll() {
-                        highlightTopPara(paragraphs, breakpointElement);
-                        window.removeEventListener('scroll', resetOnScroll);
-                    }, { once: true });
-                });
-            }
-        });
-
-        if (settings.trigger === 'scroll' || settings.trigger === 'both') {
-            window.addEventListener('scroll', function () {
-                // Skip highlighting if we're in marker navigation mode
-                if (isMarkerNavigation) {
+            // Add mouseover event listener
+            paragraph.addEventListener('mouseover', function () {
+                if (!triggerIncludesMouseover() || isScrolling) {
                     return;
                 }
 
-                isScrolling = true;
-                highlightTopPara(paragraphs, breakpointElement);
-                setTimeout(() => {
-                    isScrolling = false;
-                }, 200); // Reset after a short delay
+                Array.from(paragraphs).forEach(function (p) {
+                    if (p !== paragraph) {
+                        p.dispatchEvent(new CustomEvent('notviewing'));
+                    }
+                });
+
+                if (!paragraph.classList.contains('viewing')) {
+                    paragraph.dispatchEvent(new CustomEvent('viewing'));
+                }
             });
 
-            // Execute highlighting logic on page load
+            // Add mouseout event listener to reset on scroll
+            paragraph.addEventListener('mouseout', function () {
+                if (!triggerIncludesMouseover()) {
+                    return;
+                }
+
+                // Reset on scroll if not currently hovered
+                window.addEventListener('scroll', function resetOnScroll() {
+                    if (triggerIncludesScroll()) {
+                        highlightTopPara(paragraphs, breakpointElement);
+                    }
+                    window.removeEventListener('scroll', resetOnScroll);
+                }, { once: true });
+            });
+        });
+
+        window.addEventListener('scroll', function () {
+            if (!triggerIncludesScroll()) {
+                return;
+            }
+
+            // Skip highlighting if we're in marker navigation mode
+            if (isMarkerNavigation) {
+                return;
+            }
+
+            isScrolling = true;
+            highlightTopPara(paragraphs, breakpointElement);
+            setTimeout(() => {
+                isScrolling = false;
+            }, 200); // Reset after a short delay
+        });
+
+        // Execute highlighting logic on page load for scroll-enabled triggers
+        if (triggerIncludesScroll()) {
             highlightTopPara(paragraphs, breakpointElement);
         }
     }
@@ -476,11 +611,11 @@ function StoryMap(options) {
         document.body.appendChild(topElem);
 
         const searchfor = settings.selector;
+        const paragraphs = element.querySelectorAll(searchfor);
 
         watchHighlight(element, searchfor, topElem);
 
         // Ensure closest section is highlighted on page load
-        const paragraphs = element.querySelectorAll(searchfor);
         highlightTopPara(paragraphs, topElem);
 
         const map = settings.createMap();
@@ -584,6 +719,102 @@ function StoryMap(options) {
                     pathsLayerGroup.addTo(map);
                 }
             }
+        }
+
+        function createControlPanel() {
+            ensureControlPanelStyles();
+
+            const control = L.control({ position: 'topleft' });
+
+            control.onAdd = function () {
+                const container = L.DomUtil.create('div', 'leaflet-control leaflet-bar storymap-settings-control');
+                const wrap = L.DomUtil.create('div', 'storymap-settings-wrap', container);
+                const toggleButton = L.DomUtil.create('button', 'storymap-settings-toggle', wrap);
+                const panel = L.DomUtil.create('div', 'storymap-settings-panel', wrap);
+
+                toggleButton.type = 'button';
+                toggleButton.title = 'Map settings';
+                toggleButton.setAttribute('aria-label', 'Map settings');
+                toggleButton.textContent = '⚙';
+                if (!settings.controlPanelExpanded) {
+                    panel.hidden = true;
+                } else {
+                    toggleButton.classList.add('storymap-active');
+                }
+
+                panel.innerHTML = `
+                    <label>
+                        Trigger
+                        <select name="trigger">
+                            <option value="scroll">scroll</option>
+                            <option value="mouseover">mouseover</option>
+                            <option value="both">both</option>
+                        </select>
+                    </label>
+                    <label>
+                        Breakpoint position (%)
+                        <input type="number" name="breakpointPos" min="0" max="100" step="0.1" />
+                    </label>
+                    <label class="storymap-settings-checkbox">
+                        <input type="checkbox" name="markerClickScrollToPlace" />
+                        Scroll to place on click
+                    </label>
+                `;
+
+                const triggerSelect = panel.querySelector('select[name="trigger"]');
+                const breakpointInput = panel.querySelector('input[name="breakpointPos"]');
+                const markerClickInput = panel.querySelector('input[name="markerClickScrollToPlace"]');
+
+                triggerSelect.value = settings.trigger;
+                breakpointInput.value = parseFloat(settings.breakpointPos);
+                markerClickInput.checked = settings.markerClickScrollToPlace;
+
+                const applyBreakpointPos = function (rawValue) {
+                    settings.breakpointPos = normalizeBreakpointPos(rawValue);
+                    topElem.style.top = settings.breakpointPos;
+                    highlightTopPara(paragraphs, topElem);
+                };
+
+                L.DomEvent.on(toggleButton, 'click', function (e) {
+                    L.DomEvent.stop(e);
+                    panel.hidden = !panel.hidden;
+                    toggleButton.classList.toggle('storymap-active', !panel.hidden);
+                });
+
+                triggerSelect.addEventListener('change', function () {
+                    settings.trigger = normalizeTrigger(triggerSelect.value);
+                    if (hasScrollTrigger(settings.trigger)) {
+                        highlightTopPara(paragraphs, topElem);
+                    }
+                });
+
+                markerClickInput.addEventListener('change', function () {
+                    settings.markerClickScrollToPlace = markerClickInput.checked;
+                    showMapView(currentViewKey, { skipFlyTo: true });
+                });
+
+                breakpointInput.addEventListener('input', function () {
+                    if (!Number.isNaN(parseFloat(breakpointInput.value))) {
+                        applyBreakpointPos(breakpointInput.value);
+                    }
+                });
+
+                breakpointInput.addEventListener('change', function () {
+                    applyBreakpointPos(breakpointInput.value);
+                    breakpointInput.value = parseFloat(settings.breakpointPos);
+                });
+
+                L.DomEvent.disableClickPropagation(container);
+                L.DomEvent.disableScrollPropagation(container);
+
+                return container;
+            };
+
+            control.addTo(map);
+        }
+
+        if (settings.showControlPanel) {
+            createControlPanel();
         }
 
         map.on('zoomend', function () {
