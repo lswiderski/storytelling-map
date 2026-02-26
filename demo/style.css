@@ -1,9 +1,17 @@
 
-.sidebar {
-    /* display: none;*/
+.storymap-mobile-above .sidebar {
+     position: sticky;
+         top: 0;
+         bottom: 0;
+         right: 0;
+         z-index: 1000;
+         display: block;
+         padding: 20px;
+         overflow-x: hidden;
+         overflow-y: hidden;
+         height:30vh;
  }
- @media (min-width: 768px) {
-     .sidebar {
+    .storymap-layout-row:not(.storymap-mobile-above) .sidebar {
          position: sticky;
          top: 0;
          bottom: 0;
@@ -17,7 +25,7 @@
          border-right: 1px solid #eee;
          height:100vh;
      }
- }
+ 
  
  .main {
      padding: 20px;

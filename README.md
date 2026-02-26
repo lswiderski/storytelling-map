@@ -57,6 +57,11 @@ StoryMap({
   // Container elements
   container: '.main',           // Required: CSS selector for sections container
   mapContainer: 'map',          // Required: ID or selector for map div
+
+  // Responsive behavior
+  mobileBreakpoint: 768,        // Pixels; below this width uses mobile behavior (default: 768)
+  mobileLayout: 'normal',       // 'normal' (left-right), 'above' (map above text)
+  disableOnSmallResolution: false, // If true, StoryMap is not initialized on small screens (no map load, callbacks, or events)
   
   // Selector for sections
   selector: '[data-place]',     // CSS selector for sections (default: '[data-place]')
@@ -67,7 +72,7 @@ StoryMap({
   // Interaction
   markerClickScrollToPlace: true, // Click marker to scroll to section (default: true)
   trigger: 'scroll',             // 'scroll', 'mouseover', or 'both' (default: 'scroll')
-  
+  showControlPanel: true        // Show ot Hide Control Panel
   // Map configuration
   createMap: function () {       // Custom map creation function (optional)
     const map = L.map('map').setView([65, 18], 5);
@@ -123,6 +128,37 @@ StoryMap({
   
   // Initial view
   initialView: 'overview'        // 'overview' or marker key (optional)
+});
+```
+
+### Mobile Layout Modes
+
+Configure how map and text behave below `mobileBreakpoint`:
+
+```javascript
+StoryMap({
+  container: '.main',
+  mapContainer: 'map',
+  mobileBreakpoint: 768,
+  mobileLayout: 'above' // map above text on mobile
+});
+```
+
+`mobileLayout` options:
+- `normal`: keeps map/text side-by-side (left-right)
+- `above`: places map above text
+- `hidden`: hides map on small screens
+
+### Disable StoryMap on Small Screens
+
+To completely skip map initialization on small screens (no map load, callbacks, or event listeners):
+
+```javascript
+StoryMap({
+  container: '.main',
+  mapContainer: 'map',
+  disableOnSmallResolution: true,
+  mobileBreakpoint: 768
 });
 ```
 

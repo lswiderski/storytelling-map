@@ -29,6 +29,117 @@ function StoryMap(options) {
         return trigger === 'mouseover' || trigger === 'both';
     }
 
+    function normalizeMobileLayout(value) {
+        if (value === 'normal' || value === 'above') {
+            return value;
+        }
+        return 'normal';
+    }
+
+    function normalizeMobileBreakpoint(value) {
+        const parsed = parseInt(value, 10);
+        if (Number.isNaN(parsed) || parsed <= 0) {
+            return 768;
+        }
+        return parsed;
+    }
+
+    function isSmallResolution() {
+        return window.innerWidth < settings.mobileBreakpoint;
+    }
+
+    function ensureResponsiveLayoutStyles() {
+        const styleId = 'storymap-responsive-layout-styles';
+        if (document.getElementById(styleId)) {
+            return;
+        }
+
+        const style = document.createElement('style');
+        style.id = styleId;
+        style.textContent = `
+            .storymap-layout-row {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: flex-start;
+            }
+
+            .storymap-layout-row.storymap-mobile-above .storymap-map-col {
+                order: 1;
+                flex: 0 0 100%;
+                max-width: 100%;
+                width: 100%;
+                min-height: 300px;
+            }
+
+            .storymap-layout-row.storymap-mobile-above .storymap-main-col {
+                order: 2;
+                flex: 0 0 100%;
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .storymap-layout-row.storymap-mobile-normal .storymap-main-col {
+                order: 1;
+                flex: 0 0 58.3333%;
+                max-width: 58.3333%;
+            }
+
+            .storymap-layout-row.storymap-mobile-normal .storymap-map-col {
+                order: 2;
+                flex: 0 0 41.6667%;
+                max-width: 41.6667%;
+                min-height: 100vh;
+                position: sticky;
+                top: 0;
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+
+    function resolveMapContainerElement(mapContainer) {
+        if (!mapContainer) {
+            return document.getElementById('map');
+        }
+
+        if (typeof mapContainer === 'string') {
+            if (mapContainer.startsWith('#') || mapContainer.startsWith('.') || mapContainer.includes(' ')) {
+                return document.querySelector(mapContainer);
+            }
+
+            return document.getElementById(mapContainer) || document.querySelector(mapContainer);
+        }
+
+        if (mapContainer instanceof HTMLElement) {
+            return mapContainer;
+        }
+
+        return null;
+    }
+
+    function applyResponsiveLayout(containerElement, mapElement) {
+        if (!containerElement || !mapElement || !mapElement.parentElement) {
+            return;
+        }
+
+        ensureResponsiveLayoutStyles();
+
+        const layoutRow = mapElement.parentElement;
+        layoutRow.classList.add('storymap-layout-row');
+        containerElement.classList.add('storymap-main-col');
+        mapElement.classList.add('storymap-map-col');
+
+        const small = isSmallResolution();
+        layoutRow.classList.remove('storymap-mobile-normal', 'storymap-mobile-above');
+
+        if (!small) {
+            return;
+        }
+
+        const mobileClass = `storymap-mobile-${settings.mobileLayout}`;
+        layoutRow.classList.add(mobileClass);
+    }
+
     function ensureControlPanelStyles() {
         const styleId = 'storymap-control-panel-styles';
         if (document.getElementById(styleId)) {
@@ -119,6 +230,9 @@ function StoryMap(options) {
     const defaults = {
         selector: '[data-place]',
         breakpointPos: '33.333%',
+        mobileBreakpoint: 768,
+        mobileLayout: 'normal', // 'normal' (left-right), 'above'
+        disableOnSmallResolution: false, // If true and screen is small, map/events/callbacks are not initialized
         markerClickScrollToPlace: true, // Enable marker click to navigate and highlight sections
         createMap: function () {
             // Create a map in the "map" div, set the view to a given place and zoom
@@ -147,6 +261,9 @@ function StoryMap(options) {
     settings.breakpointPos = normalizeBreakpointPos(settings.breakpointPos);
     settings.showControlPanel = Boolean(settings.showControlPanel);
     settings.controlPanelExpanded = Boolean(settings.controlPanelExpanded);
+    settings.mobileLayout = normalizeMobileLayout(settings.mobileLayout);
+    settings.mobileBreakpoint = normalizeMobileBreakpoint(settings.mobileBreakpoint);
+    settings.disableOnSmallResolution = Boolean(settings.disableOnSmallResolution);
 
     let isScrolling = false;
     let isMarkerNavigation = false; // Flag to track when user clicks a marker
@@ -604,7 +721,9 @@ function StoryMap(options) {
         return layerGroup;
     }
 
-    function makeStoryMap(element, markers) {
+    function makeStoryMap(element, markers, mapElement) {
+        applyResponsiveLayout(element, mapElement);
+
         const topElem = document.createElement('div');
         topElem.classList.add('breakpoint-current');
         topElem.style.top = settings.breakpointPos;
@@ -619,6 +738,11 @@ function StoryMap(options) {
         highlightTopPara(paragraphs, topElem);
 
         const map = settings.createMap();
+
+        window.addEventListener('resize', function () {
+            applyResponsiveLayout(element, mapElement);
+            map.invalidateSize();
+        });
 
         const initPoint = map.getCenter();
         const initZoom = map.getZoom();
@@ -875,6 +999,19 @@ function StoryMap(options) {
     }
 
     const containerElement = document.querySelector(settings.container);
+    const mapElement = resolveMapContainerElement(settings.mapContainer ?? 'map');
+
+    if (settings.disableOnSmallResolution && isSmallResolution()) {
+        applyResponsiveLayout(containerElement, mapElement);
+        if (mapElement) {
+            mapElement.style.display = 'none';
+        }
+        return {
+            isDisabledForSmallResolution: true,
+            mobileBreakpoint: settings.mobileBreakpoint
+        };
+    }
+
     // Combine markers from both sources: maintain HTML element order as primary
     const markersFromElements = parseMarkersFromElements(containerElement);
     const markers = { ...markersFromElements };
@@ -888,7 +1025,7 @@ function StoryMap(options) {
         });
     }
 
-    makeStoryMap(containerElement, markers);
+    makeStoryMap(containerElement, markers, mapElement);
 
     // Return public methods if needed
     return {
