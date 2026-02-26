@@ -5,7 +5,23 @@ Inspired by https://tympanus.net/Development/StorytellingMap/
 I found https://github.com/atlefren/storymap 
 decided to get rid of jQuery and add some functionality
 
-DEMO: https://raw.githack.com/lswiderski/storytelling-map/main/demo/index.html
+## 📍 Demos
+
+**[View All Demos](demo/demos.html)** - Interactive gallery showcasing different features and configurations
+
+**Quick Links:**
+- [Full Features Demo](demo/index.html) - Comprehensive feature showcase
+- [Multiple Maps](demo/multimap.html) - Two maps on one page
+- [Mouseover Trigger](demo/demo-mouseover.html) - Hover to navigate
+- [Control Panel](demo/demo-controls.html) - Interactive settings
+- [Custom Markers](demo/demo-markers.html) - Styled markers and colors
+- [Mobile Layouts](demo/demo-mobile.html) - Responsive design
+- [Curved Paths](demo/demo-paths.html) - Advanced path styling
+- [Minimal Setup](demo/demo-minimal.html) - Quick start guide
+- [Custom Tiles](demo/demo-tiles.html) - Different basemaps
+- [Combined Triggers](demo/demo-both-triggers.html) - Scroll & hover
+- [Title Trigger](demo/demo-title-trigger.html) - Long-form articles with title-based navigation
+- [Hierarchical Markers](demo/demo-hierarchical.html) - Zoom-based marker visibility for drill-down navigation
 
 In the future, I would like to create a wordpress plugin based on this feature
 

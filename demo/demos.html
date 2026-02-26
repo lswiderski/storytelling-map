@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
+    />
+    <title>Storytelling Map - Demo Gallery</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+          Cantarell, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 40px 0;
+      }
+      .container {
+        max-width: 1200px;
+      }
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 50px;
+      }
+      .header h1 {
+        font-size: 48px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      .header p {
+        font-size: 20px;
+        opacity: 0.9;
+      }
+      .demo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+      }
+      .demo-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+      .demo-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        text-decoration: none;
+      }
+      .demo-card-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        position: relative;
+      }
+      .demo-card-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255, 255, 255, 0.3);
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .demo-card h3 {
+        font-size: 22px;
+        margin: 0 0 5px 0;
+        font-weight: 600;
+      }
+      .demo-card-subtitle {
+        font-size: 14px;
+        opacity: 0.9;
+        margin: 0;
+      }
+      .demo-card-body {
+        padding: 20px;
+      }
+      .demo-card-body p {
+        color: #666;
+        line-height: 1.6;
+        margin: 0 0 15px 0;
+      }
+      .demo-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .demo-features li {
+        padding: 5px 0;
+        font-size: 14px;
+        color: #888;
+      }
+      .demo-features li:before {
+        content: '✓ ';
+        color: #667eea;
+        font-weight: bold;
+        margin-right: 5px;
+      }
+      .footer {
+        text-align: center;
+        color: white;
+        margin-top: 50px;
+        opacity: 0.8;
+      }
+      @media (max-width: 768px) {
+        .demo-grid {
+          grid-template-columns: 1fr;
+        }
+        .header h1 {
+          font-size: 36px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>📍 Storytelling Map Demos</h1>
+        <p>Explore different features and configurations</p>
+      </div>
+
+      <div class="demo-grid">
+        <!-- Demo 1: Full Features -->
+        <a href="index.html" class="demo-card">
+          <div class="demo-card-header">
+            <div class="demo-card-badge">Featured</div>
+            <h3>Full Features Demo</h3>
+            <p class="demo-card-subtitle">Complete showcase</p>
+          </div>
+          <div class="demo-card-body">
+            <p>
+              Comprehensive demo showing all major features including curved
+              paths, tooltips, popups, and custom styling.
+            </p>
+            <ul class="demo-features">
+              <li>Scroll-triggered navigation</li>
+              <li>Curved paths between locations</li>
+              <li>Custom tooltips & popups</li>
+              <li>Data attributes configuration</li>
+            </ul>
+          </div>
+        </a>
+
+        <!-- Demo 2: Multiple Maps -->
+        <a href="multimap.html" class="demo-card">
+          <div class="demo-card-header">
+            <h3>Multiple Maps</h3>
+            <p class="demo-card-subtitle">Two maps on one page</p>
+          </div>
+          <div class="demo-card-body">
+            <p>
+              Demonstrates running multiple independent storytelling maps on a
+              single page.
+            </p>
+            <ul class="demo-features">
+              <li>Two separate map instances</li>
+              <li>Independent content sections</li>
+              <li>Shared marker configuration</li>
+            </ul>
+          </div>
+        </a>
+
+        <!-- Demo 3: Mouseover Trigger -->
+        <a href="demo-mouseover.html" class="demo-card">
+          <div class="demo-card-header">
+            <h3>Mouseover Trigger</h3>
+            <p class="demo-card-subtitle">Hover to navigate</p>
+          </div>
+          <div class="demo-card-body">
+            <p>
+              Map updates when you hover over content sections instead of
+              scrolling.
+            </p>
+            <ul class="demo-features">
+              <li>Mouseover interaction mode</li>
+              <li>Instant location switching</li>
+              <li>Great for desktop interaction</li>
+            </ul>
+          </div>
+        </a>
+
+        <!-- Demo 4: Control Panel -->
+        <a href="demo-controls.html" class="demo-card">
+          <div class="demo-card-header">
+            <div class="demo-card-badge">Interactive</div>
+            <h3>Control Panel</h3>
+            <p class="demo-card-subtitle">Live settings</p>
+          </div>
+          <div class="demo-card-body">
+            <p>
+              Interactive control panel to adjust trigger mode, breakpoint
+              position, and scroll offset.
+            </p>
+            <ul class="demo-features">
+              <li>Dynamic settings adjustment</li>
+              <li>Trigger mode switching</li>
+              <li>Breakpoint controls</li>
+            </ul>
+          </div>
+        </a>
+
+        <!-- Demo 5: Custom Markers -->
+        <a href="demo-markers.html" class="demo-card">
+          <div class="demo-card-header">
+            <h3>Custom Markers & Colors</h3>
+            <p class="demo-card-subtitle">Styled markers</p>
+          </div>
+          <div class="demo-card-body">
+            <p>
+              Showcase custom marker colors, icons, and advanced marker
+              configuration.
+            </p>
+            <ul class="demo-features">
+              <li>Custom marker colors</li>
+              <li>Custom icons</li>
+              <li>Hidden markers</li>
+              <li>Min/max zoom levels</li>
+            </ul>
+          </div>
+        </a>
+
+        <!-- Demo 6: Mobile Layouts -->
+        <a href="demo-mobile.html" class="demo-card">
+          <div class="demo-card-header">
+            <h3>Mobile Layouts</h3>
+            <p class="demo-card-subtitle">Responsive design</p>
+          </div>
+          <div class="demo-card-body">
+            <p>
+              Different layout options for mobile devices with map above or
+              beside content.
+            </p>
+            <ul class="demo-features">
+              <li>Map above content on mobile</li>
+              <li>Responsive breakpoints</li>
+              <li>Touch-friendly interface</li>
+            </ul>
+          </div>
+        </a>
+
+        <!-- Demo 7: Path Styles -->
+        <a href="demo-paths.html" class="demo-card">
+          <div class="demo-card-header">
+            <h3>Curved Paths</h3>
+            <p class="demo-card-subtitle">Advanced path styling</p>
+          </div>
+          <div class="demo-card-body">
+            <p>
+              Various path configurations including curved paths, different
+              colors, and styles.
+            </p>
+            <ul class="demo-features">
+              <li>Bezier curved paths</li>
+              <li>Custom path styles</li>
+              <li>Path tooltips & popups</li>
+              <li>Direction control</li>
+            </ul>
+          </div>
+        </a>
+
+        <!-- Demo 8: Minimal Setup -->
+        <a href="demo-minimal.html" class="demo-card">
+          <div class="demo-card-header">
+            <h3>Minimal Setup</h3>
+            <p class="demo-card-subtitle">Quick start</p>
+          </div>
+          <div class="demo-card-body">
+            <p>The simplest possible configuration to get started quickly.</p>
+            <ul class="demo-features">
+              <li>Minimal code</li>
+              <li>Default settings</li>
+              <li>Easy to understand</li>
+              <li>Great starting point</li>
+            </ul>
+          </div>
+        </a>
+
+        <!-- Demo 9: Custom Tiles -->
+        <a href="demo-tiles.html" class="demo-card">
+          <div class="demo-card-header">
+            <h3>Custom Map Tiles</h3>
+            <p class="demo-card-subtitle">Different basemaps</p>
+          </div>
+          <div class="demo-card-body">
+            <p>Using different map tile providers for various visual styles.</p>
+            <ul class="demo-features">
+              <li>Satellite imagery</li>
+              <li>Terrain maps</li>
+              <li>Dark mode</li>
+              <li>Custom styling</li>
+            </ul>
+          </div>
+        </a>
+
+        <!-- Demo 10: Both Triggers -->
+        <a href="demo-both-triggers.html" class="demo-card">
+          <div class="demo-card-header">
+            <h3>Combined Triggers</h3>
+            <p class="demo-card-subtitle">Scroll & Hover</p>
+          </div>
+          <div class="demo-card-body">
+            <p>
+              Use both scroll and mouseover triggers simultaneously for maximum
+              flexibility.
+            </p>
+            <ul class="demo-features">
+              <li>Scroll trigger enabled</li>
+              <li>Mouseover trigger enabled</li>
+              <li>Best of both worlds</li>
+            </ul>
+          </div>
+        </a>
+
+        <!-- Demo 11: Title Triggers -->
+        <a href="demo-title-trigger.html" class="demo-card">
+          <div class="demo-card-header">
+            <div class="demo-card-badge">Long-form</div>
+            <h3>Title Trigger</h3>
+            <p class="demo-card-subtitle">Headlines only</p>
+          </div>
+          <div class="demo-card-body">
+            <p>
+              Perfect for long-form articles where only headings trigger map
+              updates, not entire sections.
+            </p>
+            <ul class="demo-features">
+              <li>Title-based navigation</li>
+              <li>Long paragraphs between locations</li>
+              <li>Clean article structure</li>
+              <li>Blog-style content</li>
+            </ul>
+          </div>
+        </a>
+
+        <!-- Demo 12: Hierarchical Markers -->
+        <a href="demo-hierarchical.html" class="demo-card">
+          <div class="demo-card-header">
+            <div class="demo-card-badge">Advanced</div>
+            <h3>Hierarchical Markers</h3>
+            <p class="demo-card-subtitle">Zoom-based visibility</p>
+          </div>
+          <div class="demo-card-body">
+            <p>
+              Drill-down navigation with different markers at different zoom
+              levels using minZoom/maxZoom.
+            </p>
+            <ul class="demo-features">
+              <li>Cities visible at overview level</li>
+              <li>POIs visible when zoomed in</li>
+              <li>Automatic marker switching</li>
+              <li>Perfect for city guides</li>
+            </ul>
+          </div>
+        </a>
+      </div>
+
+      <div class="footer">
+        <p>🗺️ Storytelling Map Library - Interactive Map Navigation</p>
+      </div>
+    </div>
+  </body>
+</html>

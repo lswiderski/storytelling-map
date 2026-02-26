@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Title Trigger Demo - Storytelling Map</title>
+    <style>
+      .demo-info {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .demo-info h4 {
+        margin-top: 0;
+        color: #856404;
+      }
+      .main h2[data-place] {
+        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        padding: 15px;
+        border-left: 4px solid #667eea;
+        border-radius: 4px;
+        margin: 30px 0 15px 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .main h2[data-place]:hover {
+        background: linear-gradient(135deg, #667eea25 0%, #764ba225 100%);
+        border-left: 6px solid #667eea;
+        transform: translateX(5px);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 header">
+          <h1>Title Trigger Demo</h1>
+          <div class="demo-info">
+            <h4>📝 Title-Based Navigation:</h4>
+            <p>
+              In this demo, <strong>only the headings/titles</strong> have the
+              <code>data-place</code>
+              attribute, not entire sections. This creates a cleaner structure
+              for long-form content where you want the map to update when
+              scrolling past headlines.
+            </p>
+            <p>
+              This approach is ideal for blog posts, articles, or narratives
+              with extended paragraphs between location changes.
+            </p>
+          </div>
+          <p>
+            Unlike traditional section-based triggering, this demo places
+            <code>data-place</code>
+            attributes directly on heading elements. The map updates when you
+            scroll past each highlighted title, perfect for long-form
+            storytelling.
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-9 col-md-7 main">
+          <h2 data-place="intro">The Silk Road: A Journey Through Time</h2>
+          <p>
+            The Silk Road was not a single road but rather a network of trade
+            routes that connected the East and West for centuries. It was
+            central to the economic, cultural, political, and religious
+            interactions between these regions from the 2nd century BCE to the
+            18th century.
+          </p>
+          <p>
+            Named for the lucrative Chinese silk trade that was carried out
+            along its length, the Silk Road was not just about silk. It
+            facilitated the exchange of many goods, including spices, glass,
+            precious metals, and textiles. More importantly, it was a conduit
+            for ideas, religions, technologies, and cultures.
+          </p>
+          <p>
+            The routes ran through some of the world's most formidable
+            landscapes, from the scorching deserts of Central Asia to the frozen
+            mountain passes of the Pamir and Tian Shan ranges. Merchants,
+            pilgrims, soldiers, nomads, and urban dwellers all used these
+            routes, creating a rich tapestry of human interaction and exchange.
+          </p>
+          <p>
+            Today, we can still trace these ancient routes and visit the cities
+            that once thrived as major trading hubs. This journey will take us
+            through some of the most significant stops along the Silk Road,
+            exploring their history and their role in this vast network of
+            exchange.
+          </p>
+
+          <h2 data-place="xian">Xi'an: The Eastern Terminus</h2>
+          <p>
+            Xi'an, known in ancient times as Chang'an, served as the eastern
+            terminus of the Silk Road and was one of the oldest cities in China.
+            As the capital of several of China's most important dynasties,
+            including the Han and Tang, it was a cosmopolitan metropolis and one
+            of the largest cities in the world during its peak.
+          </p>
+          <p>
+            From Xi'an, merchants would begin the arduous journey westward,
+            their caravans laden with silk, porcelain, and tea. The city was a
+            bustling hub where Chinese traders met with merchants from Central
+            Asia, Persia, and beyond. The markets of Chang'an were legendary,
+            offering goods from across the known world.
+          </p>
+          <p>
+            Today, Xi'an is most famous for the Terracotta Army, discovered in
+            1974 by local farmers. These thousands of life-sized clay soldiers
+            were buried with China's first emperor, Qin Shi Huang, in 210-209
+            BCE. But beyond this archaeological wonder, the city still retains
+            much of its ancient character, with well-preserved city walls and
+            vibrant Muslim Quarter.
+          </p>
+          <p>
+            The city's importance to the Silk Road cannot be overstated. It was
+            here that the goods, ideas, and people began their journey into the
+            vast unknown of the western territories. The Tang Dynasty saw Xi'an
+            reach its zenith, with a population exceeding one million people,
+            making it a true world city of its time.
+          </p>
+
+          <h2 data-place="dunhuang">Dunhuang: Gateway to the Desert</h2>
+          <p>
+            As caravans left the relative comfort of China's interior, Dunhuang
+            was the last major stop before the treacherous journey across the
+            Taklamakan Desert. This oasis town sat at a crucial junction where
+            the northern and southern routes around the desert met.
+          </p>
+          <p>
+            Dunhuang is home to the famous Mogao Caves, also known as the
+            Thousand Buddha Grottoes. These caves contain some of the finest
+            examples of Buddhist art spanning a period of 1,000 years. The caves
+            were carved and painted by Buddhist monks between the 4th and 14th
+            centuries, and they served as a place of worship for travelers
+            seeking blessings before crossing the desert.
+          </p>
+          <p>
+            In 1900, a Taoist monk discovered a hidden library cave containing
+            thousands of manuscripts, paintings, and documents dating from the
+            5th to 11th centuries. This cache, known as the Dunhuang
+            manuscripts, provided invaluable insights into medieval China and
+            the Silk Road trade. The documents were written in over a dozen
+            languages and scripts, reflecting the cosmopolitan nature of this
+            desert outpost.
+          </p>
+          <p>
+            The journey from Dunhuang across the desert was perilous. The
+            Taklamakan Desert, whose name means "Place of No Return" in the
+            Uyghur language, claimed many lives. Merchants had to decide whether
+            to take the northern or southern route around the desert, each with
+            its own dangers and advantages. Water was scarce, sandstorms were
+            common, and the temperature could swing dramatically between day and
+            night.
+          </p>
+
+          <h2 data-place="samarkand">Samarkand: Jewel of the Silk Road</h2>
+          <p>
+            Samarkand, located in present-day Uzbekistan, was perhaps the most
+            important city along the entire Silk Road. Situated at the
+            crossroads of routes from China, India, and Persia, it became
+            fabulously wealthy from the trade passing through it. The city was
+            already ancient by the time of Alexander the Great, who conquered it
+            in 329 BCE.
+          </p>
+          <p>
+            Under the rule of Timur (Tamerlane) in the 14th century, Samarkand
+            reached its golden age. Timur made it the capital of his vast empire
+            and ordered the construction of magnificent buildings that still
+            stand today. The Registan, a public square surrounded by three
+            madrasahs (Islamic schools), is one of the most iconic sights of
+            Central Asia. Its towering azure-tiled domes and intricate mosaics
+            represent the pinnacle of Islamic architecture.
+          </p>
+          <p>
+            Samarkand was not just a trading hub but also a center of learning.
+            Scholars from across the Islamic world gathered here to study
+            astronomy, mathematics, and philosophy. Ulugh Beg, Timur's grandson,
+            built an observatory here in the 15th century that was the most
+            advanced of its time. His star catalogue was the most accurate until
+            the invention of the telescope.
+          </p>
+          <p>
+            The bazaars of Samarkand were legendary even among seasoned Silk
+            Road travelers. Here, one could find Chinese silk and porcelain,
+            Indian spices and gems, Persian carpets and metalwork, and European
+            glassware. The city was a melting pot of cultures, religions, and
+            languages. Zoroastrians, Buddhists, Christians, Muslims, and
+            followers of other faiths all coexisted in this cosmopolitan center.
+          </p>
+
+          <h2 data-place="baghdad">Baghdad: The Round City</h2>
+          <p>
+            In 762 CE, the Abbasid caliph Al-Mansur founded Baghdad on the banks
+            of the Tigris River. The city was designed as a perfect circle,
+            earning it the nickname "The Round City." It quickly became the
+            intellectual and commercial heart of the Islamic Golden Age and a
+            crucial link in the Silk Road network.
+          </p>
+          <p>
+            At its height during the 9th and 10th centuries, Baghdad was the
+            largest city in the world, with a population approaching one million
+            people. The House of Wisdom, established by Caliph Harun al-Rashid
+            and expanded by his son Al-Ma'mun, became the world's greatest
+            library and center of learning. Scholars there translated works from
+            Greek, Persian, Sanskrit, and other languages, preserving ancient
+            knowledge and making new discoveries in mathematics, astronomy,
+            medicine, and philosophy.
+          </p>
+          <p>
+            The city's markets were among the most diverse in the world. The
+            Grand Bazaar stretched for miles, with different sections dedicated
+            to various goods. Here, merchants from China would trade silk and
+            spices with those from Europe, Africa, and other parts of Asia. The
+            city's location made it an ideal meeting point for traders from all
+            directions.
+          </p>
+          <p>
+            Sadly, Baghdad's golden age came to a catastrophic end in 1258 when
+            the Mongol army under Hulagu Khan sacked the city. The libraries
+            were destroyed, the canals were wrecked, and hundreds of thousands
+            of people were killed. The city would never fully recover its former
+            glory, though it remained an important regional center.
+          </p>
+
+          <h2 data-place="istanbul">Istanbul: Where East Meets West</h2>
+          <p>
+            Constantinople, now Istanbul, was the western terminus of the Silk
+            Road and one of history's most important cities. Founded as
+            Byzantium by Greek colonists in the 7th century BCE, it was
+            refounded as Constantinople by Emperor Constantine in 330 CE and
+            became the capital of the Byzantine Empire.
+          </p>
+          <p>
+            The city's strategic location on the Bosporus Strait, controlling
+            the passage between the Black Sea and the Mediterranean, made it
+            immensely wealthy and important. All goods traveling from Asia to
+            Europe by land had to pass through Constantinople. The city's Grand
+            Bazaar, though built after the Silk Road's decline, still evokes the
+            atmosphere of those ancient trading days.
+          </p>
+          <p>
+            Byzantine Constantinople was famous for its magnificent
+            architecture, particularly the Hagia Sophia, built by Emperor
+            Justinian in 537 CE. This massive cathedral with its huge dome was
+            the largest building in the world for nearly a thousand years and
+            represented the apex of Byzantine architecture. When the Ottomans
+            conquered the city in 1453, they converted it into a mosque, adding
+            minarets but preserving its essential structure.
+          </p>
+          <p>
+            The city was also famous for its trade in luxury goods. Byzantine
+            silk, produced in imperial workshops, was renowned throughout Europe
+            and the Middle East. The secret of silk production, smuggled out of
+            China by Byzantine monks in the 6th century, ended China's monopoly
+            and made Constantinople a major producer in its own right.
+          </p>
+          <p>
+            Today, Istanbul remains a bridge between East and West, Asia and
+            Europe. Its markets still bustle with traders, its streets still
+            echo with multiple languages, and its skyline still showcases the
+            architecture of empires past. Walking through Istanbul, one can
+            still feel the spirit of the Silk Road, that ancient network of
+            exchange that shaped the world we live in today.
+          </p>
+
+          <h2 data-place="intro">Epilogue: The Legacy of the Silk Road</h2>
+          <p>
+            The Silk Road gradually declined from the 15th century onwards as
+            maritime routes became more important for global trade. The Age of
+            Exploration opened new sea routes between Europe and Asia that were
+            faster and safer than the overland routes. The political
+            fragmentation of Central Asia also made travel more difficult and
+            dangerous.
+          </p>
+          <p>
+            However, the legacy of the Silk Road endures. It facilitated the
+            spread of religions, with Buddhism traveling from India to China,
+            Islam spreading across Central Asia, and Christianity reaching as
+            far as China. Technologies like papermaking and gunpowder traveled
+            westward, while innovations in astronomy and mathematics moved
+            eastward.
+          </p>
+          <p>
+            Today, there is renewed interest in the ancient Silk Road routes.
+            The term "New Silk Road" is used to describe modern economic and
+            infrastructure initiatives linking Asia and Europe. Tourists travel
+            these routes to experience the rich history and diverse cultures of
+            the regions the Silk Road once connected. The cities along the old
+            routes preserve monuments and memories of this remarkable period of
+            human exchange and cooperation.
+          </p>
+        </div>
+        <div id="map" class="col-sm-3 col-md-5 sidebar"></div>
+      </div>
+    </div>
+
+    <script src="../src/storytellingmap.js"></script>
+    <script type="text/javascript">
+      (function () {
+        'use strict';
+
+        var markers = {
+          intro: {
+            lat: 40.0,
+            lon: 80.0,
+            zoom: 3,
+          },
+          xian: {
+            lat: 34.3416,
+            lon: 108.9398,
+            zoom: 10,
+          },
+          dunhuang: {
+            lat: 40.1423,
+            lon: 94.6618,
+            zoom: 10,
+          },
+          samarkand: {
+            lat: 39.6542,
+            lon: 66.9597,
+            zoom: 11,
+          },
+          baghdad: {
+            lat: 33.3128,
+            lon: 44.3615,
+            zoom: 11,
+          },
+          istanbul: {
+            lat: 41.0082,
+            lon: 28.9784,
+            zoom: 11,
+          },
+        };
+
+        StoryMap({
+          container: '.main',
+          mapContainer: 'map',
+          markers: markers,
+          selector: 'h2[data-place]', // Only target h2 elements with data-place
+        });
+      })();
+    </script>
+  </body>
+</html>

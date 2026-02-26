@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Control Panel Demo - Storytelling Map</title>
+    <style>
+      .demo-info {
+        background: #d1ecf1;
+        border: 1px solid #bee5eb;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .demo-info h4 {
+        margin-top: 0;
+        color: #0c5460;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 header">
+          <h1>Control Panel Demo</h1>
+          <div class="demo-info">
+            <h4>⚙️ Interactive Settings:</h4>
+            <p>
+              <strong>Look for the settings icon</strong> (⚙️) in the top-left
+              corner of the map! Click it to open an interactive control panel
+              where you can dynamically adjust:
+            </p>
+            <ul>
+              <li>
+                <strong>Trigger Mode:</strong> Switch between scroll, mouseover,
+                or both
+              </li>
+              <li>
+                <strong>Breakpoint Position:</strong> Adjust when sections
+                become "active" during scroll
+              </li>
+              <li>
+                <strong>Scroll Offset:</strong> Fine-tune the scroll threshold
+              </li>
+            </ul>
+          </div>
+          <p>
+            This demo showcases the built-in control panel feature. Users can
+            experiment with different settings in real-time to find the behavior
+            that works best for their needs.
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-9 col-md-7 main">
+          <section data-place="overview">
+            <h2>European Capitals Overview</h2>
+            <p>
+              Welcome to a tour of major European capital cities. Use the
+              control panel on the map to experiment with different interaction
+              modes and settings.
+            </p>
+            <p>
+              Try switching between scroll and mouseover modes to see which one
+              you prefer. Adjust the breakpoint position to change when sections
+              trigger map updates.
+            </p>
+          </section>
+
+          <section data-place="london">
+            <h2>London, United Kingdom</h2>
+            <p>
+              London is the capital and largest city of England and the United
+              Kingdom. With a rich history spanning nearly two millennia, London
+              has been a major settlement since Roman times.
+            </p>
+            <p>
+              Major landmarks include Big Ben, the Tower of London, Buckingham
+              Palace, and the British Museum. The city is a global hub for
+              finance, culture, and education.
+            </p>
+          </section>
+
+          <section data-place="paris">
+            <h2>Paris, France</h2>
+            <p>
+              Paris, the capital of France, is one of the most iconic cities in
+              the world. Known as the "City of Light," Paris has been a center
+              of art, fashion, gastronomy, and culture for centuries.
+            </p>
+            <p>
+              The Eiffel Tower, Louvre Museum, Notre-Dame Cathedral, and Arc de
+              Triomphe are just a few of the city's world-famous attractions.
+            </p>
+          </section>
+
+          <section data-place="berlin">
+            <h2>Berlin, Germany</h2>
+            <p>
+              Berlin, Germany's capital, is renowned for its exceptional range
+              of landmarks, vibrant cultural scene, and tumultuous 20th-century
+              history.
+            </p>
+            <p>
+              The Brandenburg Gate, remnants of the Berlin Wall, the Reichstag
+              building, and Museum Island are among the city's must-see
+              attractions.
+            </p>
+          </section>
+
+          <section data-place="rome">
+            <h2>Rome, Italy</h2>
+            <p>
+              Rome, the capital of Italy, is a sprawling metropolis with nearly
+              3,000 years of globally influential art, architecture, and culture
+              on display.
+            </p>
+            <p>
+              Ancient ruins such as the Colosseum and Roman Forum, the Vatican
+              City with St. Peter's Basilica and the Sistine Chapel, and the
+              Trevi Fountain make Rome one of the world's most visited cities.
+            </p>
+          </section>
+
+          <section data-place="madrid">
+            <h2>Madrid, Spain</h2>
+            <p>
+              Madrid, Spain's central capital, is a city of elegant boulevards
+              and expansive, manicured parks such as the Buen Retiro. It's
+              renowned for its rich repositories of European art.
+            </p>
+            <p>
+              The Royal Palace, Prado Museum, and lively Plaza Mayor are central
+              to Madrid's cultural identity. The city is also famous for its
+              vibrant nightlife and tapas culture.
+            </p>
+          </section>
+
+          <section data-place="amsterdam">
+            <h2>Amsterdam, Netherlands</h2>
+            <p>
+              Amsterdam is the Netherlands' capital, known for its artistic
+              heritage, elaborate canal system, and narrow houses with gabled
+              facades.
+            </p>
+            <p>
+              The Van Gogh Museum, Anne Frank House, and the historic canal ring
+              (a UNESCO World Heritage site) are among the city's major
+              attractions.
+            </p>
+          </section>
+        </div>
+        <div id="map" class="col-sm-3 col-md-5 sidebar"></div>
+      </div>
+    </div>
+
+    <script src="../src/storytellingmap.js"></script>
+    <script type="text/javascript">
+      (function () {
+        'use strict';
+
+        var markers = {
+          overview: {
+            lat: 50.0,
+            lon: 10.0,
+            zoom: 4,
+          },
+          london: {
+            lat: 51.5074,
+            lon: -0.1278,
+            zoom: 11,
+          },
+          paris: {
+            lat: 48.8566,
+            lon: 2.3522,
+            zoom: 11,
+          },
+          berlin: {
+            lat: 52.52,
+            lon: 13.405,
+            zoom: 11,
+          },
+          rome: {
+            lat: 41.9028,
+            lon: 12.4964,
+            zoom: 11,
+          },
+          madrid: {
+            lat: 40.4168,
+            lon: -3.7038,
+            zoom: 11,
+          },
+          amsterdam: {
+            lat: 52.3676,
+            lon: 4.9041,
+            zoom: 11,
+          },
+        };
+
+        StoryMap({
+          container: '.main',
+          mapContainer: 'map',
+          markers: markers,
+          showControlPanel: true, // Enable the control panel
+          controlPanelExpanded: true, // Start with it expanded
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Hierarchical Markers Demo - Storytelling Map</title>
+    <style>
+      .demo-info {
+        background: #e7f3ff;
+        border: 1px solid #b3d9ff;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .demo-info h4 {
+        margin-top: 0;
+        color: #004085;
+      }
+      .zoom-indicator {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-weight: 600;
+        display: inline-block;
+        margin: 5px 0;
+      }
+      .poi-section {
+        background: #f8f9fa;
+        border-left: 3px solid #667eea;
+        padding: 10px 15px;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 header">
+          <h1>Hierarchical Markers Demo</h1>
+          <div class="demo-info">
+            <h4>🔍 Zoom-Based Marker Visibility:</h4>
+            <p>
+              This demo demonstrates
+              <strong>hierarchical navigation</strong> using minZoom and maxZoom
+              settings. Different markers appear at different zoom levels:
+            </p>
+            <ul>
+              <li>
+                <span class="zoom-indicator">🌍 Overview Zoom (≤10)</span> - See
+                city markers only
+              </li>
+              <li>
+                <span class="zoom-indicator">🏙️ City Zoom (≥11)</span> - See
+                points of interest, city markers hidden
+              </li>
+            </ul>
+            <p>
+              This creates a natural drill-down experience where you explore
+              cities first, then discover specific locations within each city as
+              you zoom in.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-9 col-md-7 main">
+          <section data-place="overview">
+            <h2>European Cities Overview</h2>
+            <p>
+              Welcome to a hierarchical tour of three great European cities.
+              Start at this overview level where you can see all three city
+              markers on the map.
+            </p>
+            <p>
+              As you scroll through and zoom into each city, watch how the city
+              markers disappear and are replaced by markers for specific points
+              of interest within that city. This creates a natural exploration
+              experience from macro to micro level.
+            </p>
+          </section>
+
+          <section data-place="paris">
+            <h2>Paris, France</h2>
+            <p>
+              Paris, the City of Light, is one of the world's most visited
+              capitals. Known for its art, fashion, gastronomy, and culture,
+              Paris offers countless attractions for visitors.
+            </p>
+            <p>
+              As we zoom into Paris, the city marker disappears and is replaced
+              by markers for specific landmarks. Let's explore some of the
+              city's most iconic locations.
+            </p>
+
+            <div class="poi-section">
+              <h3 data-place="eiffel-tower">🗼 Eiffel Tower</h3>
+              <p>
+                The Eiffel Tower, built in 1889 for the World's Fair, is Paris's
+                most recognizable landmark. Standing 330 meters tall, it was the
+                world's tallest structure until 1930. Over 7 million people
+                visit each year, making it one of the most visited paid
+                monuments in the world.
+              </p>
+            </div>
+
+            <div class="poi-section">
+              <h3 data-place="louvre">🖼️ Louvre Museum</h3>
+              <p>
+                The Louvre is the world's largest art museum and a historic
+                monument in Paris. Originally a royal palace, it now houses over
+                380,000 objects and displays 35,000 works of art. Its iconic
+                glass pyramid entrance was completed in 1989 and has become a
+                symbol of the museum.
+              </p>
+            </div>
+
+            <div class="poi-section">
+              <h3 data-place="arc-triomphe">🏛️ Arc de Triomphe</h3>
+              <p>
+                The Arc de Triomphe honors those who fought and died for France
+                in the French Revolutionary and Napoleonic Wars. The names of
+                all French victories and generals are inscribed on its surfaces.
+                It stands at the center of Place Charles de Gaulle, at the
+                western end of the Champs-Élysées.
+              </p>
+            </div>
+          </section>
+
+          <section data-place="london">
+            <h2>London, United Kingdom</h2>
+            <p>
+              London, the capital of England and the United Kingdom, is a
+              21st-century city with history stretching back to Roman times.
+              From royal palaces to modern skyscrapers, London blends the
+              ancient with the contemporary.
+            </p>
+            <p>
+              Zooming into London reveals its famous landmarks. The city marker
+              fades away as markers for specific attractions appear on the map.
+            </p>
+
+            <div class="poi-section">
+              <h3 data-place="tower-london">🏰 Tower of London</h3>
+              <p>
+                The Tower of London is a historic castle founded towards the end
+                of 1066. It has served as a royal palace, prison, armory, and
+                treasury. Today it houses the Crown Jewels and is one of
+                London's most popular tourist attractions, protected as a UNESCO
+                World Heritage Site.
+              </p>
+            </div>
+
+            <div class="poi-section">
+              <h3 data-place="big-ben">🕰️ Big Ben & Parliament</h3>
+              <p>
+                Big Ben is the nickname for the Great Bell of the clock at the
+                north end of the Palace of Westminster. The tower itself,
+                officially called Elizabeth Tower since 2012, is an iconic
+                symbol of London and the United Kingdom. The palace houses the
+                UK Parliament.
+              </p>
+            </div>
+
+            <div class="poi-section">
+              <h3 data-place="buckingham">👑 Buckingham Palace</h3>
+              <p>
+                Buckingham Palace is the London residence and administrative
+                headquarters of the British monarch. The palace has 775 rooms
+                and is one of the few working royal palaces in the world. The
+                Changing of the Guard ceremony is a major tourist attraction.
+              </p>
+            </div>
+          </section>
+
+          <section data-place="rome">
+            <h2>Rome, Italy</h2>
+            <p>
+              Rome, the Eternal City, is a vast museum of history, art, and
+              architecture. With nearly 3,000 years of globally influential
+              culture, Rome has been a major human settlement since ancient
+              times.
+            </p>
+            <p>
+              As we zoom into Rome, specific historical sites become visible
+              while the city marker vanishes. Each location tells a story of
+              Rome's incredible past.
+            </p>
+
+            <div class="poi-section">
+              <h3 data-place="colosseum">🏟️ Colosseum</h3>
+              <p>
+                The Colosseum is an oval amphitheater built in 70-80 AD. It's
+                the largest ancient amphitheater ever built and could hold
+                50,000 to 80,000 spectators. Despite damage from earthquakes and
+                stone-robbers, it remains an iconic symbol of Imperial Rome.
+              </p>
+            </div>
+
+            <div class="poi-section">
+              <h3 data-place="vatican">⛪ Vatican City</h3>
+              <p>
+                Vatican City, an independent city-state enclaved within Rome, is
+                the spiritual and administrative center of the Catholic Church.
+                St. Peter's Basilica and the Sistine Chapel attract millions of
+                visitors annually to see Michelangelo's masterpieces.
+              </p>
+            </div>
+
+            <div class="poi-section">
+              <h3 data-place="trevi">⛲ Trevi Fountain</h3>
+              <p>
+                The Trevi Fountain is the largest Baroque fountain in Rome and
+                one of the most famous fountains in the world. Completed in
+                1762, legend says that throwing a coin into the fountain ensures
+                your return to Rome. About 3,000 euros are thrown into it daily.
+              </p>
+            </div>
+          </section>
+
+          <section data-place="overview">
+            <h2>Conclusion</h2>
+            <p>
+              You've experienced hierarchical navigation through three great
+              European cities. The use of minZoom and maxZoom settings created a
+              natural flow from city overview to specific landmarks.
+            </p>
+            <p>
+              This technique is perfect for travel guides, city tours, or any
+              application where you want to show broad categories first, then
+              drill down into specific locations. The markers automatically show
+              and hide based on the zoom level, creating an intuitive user
+              experience.
+            </p>
+          </section>
+        </div>
+        <div id="map" class="col-sm-3 col-md-5 sidebar"></div>
+      </div>
+    </div>
+
+    <script src="../src/storytellingmap.js"></script>
+    <script type="text/javascript">
+      (function () {
+        'use strict';
+
+        var markers = {
+          overview: {
+            lat: 48.5,
+            lon: 4.0,
+            zoom: 5,
+          },
+
+          // CITY MARKERS - Only visible at zoom level <= 10
+          paris: {
+            lat: 48.8566,
+            lon: 2.3522,
+            zoom: 13,
+            maxZoom: 10, // Hide when zoomed in beyond 10
+            markerColor: '#FF0000',
+            tooltip: 'Paris - Click to explore',
+          },
+          london: {
+            lat: 51.5074,
+            lon: -0.1278,
+            zoom: 13,
+            maxZoom: 10, // Hide when zoomed in beyond 10
+            markerColor: '#0000FF',
+            tooltip: 'London - Click to explore',
+          },
+          rome: {
+            lat: 41.9028,
+            lon: 12.4964,
+            zoom: 13,
+            maxZoom: 10, // Hide when zoomed in beyond 10
+            markerColor: '#00AA00',
+            tooltip: 'Rome - Click to explore',
+          },
+
+          // PARIS POIs - Only visible at zoom level >= 11
+          'eiffel-tower': {
+            lat: 48.8584,
+            lon: 2.2945,
+            zoom: 15,
+            minZoom: 11, // Only show when zoomed in to 11 or higher
+            markerColor: '#FF6B6B',
+            tooltip: 'Eiffel Tower',
+            popup: 'Height: 330m | Built: 1889',
+          },
+          louvre: {
+            lat: 48.8606,
+            lon: 2.3376,
+            zoom: 15,
+            minZoom: 11,
+            markerColor: '#FF6B6B',
+            tooltip: 'Louvre Museum',
+            popup: "World's largest art museum",
+          },
+          'arc-triomphe': {
+            lat: 48.8738,
+            lon: 2.295,
+            zoom: 15,
+            minZoom: 11,
+            markerColor: '#FF6B6B',
+            tooltip: 'Arc de Triomphe',
+            popup: 'Honors French military victories',
+          },
+
+          // LONDON POIs - Only visible at zoom level >= 11
+          'tower-london': {
+            lat: 51.5081,
+            lon: -0.0759,
+            zoom: 15,
+            minZoom: 11,
+            markerColor: '#6B8EFF',
+            tooltip: 'Tower of London',
+            popup: 'Historic castle | Houses Crown Jewels',
+          },
+          'big-ben': {
+            lat: 51.5007,
+            lon: -0.1246,
+            zoom: 15,
+            minZoom: 11,
+            markerColor: '#6B8EFF',
+            tooltip: 'Big Ben & Parliament',
+            popup: 'Iconic clock tower',
+          },
+          buckingham: {
+            lat: 51.5014,
+            lon: -0.1419,
+            zoom: 15,
+            minZoom: 11,
+            markerColor: '#6B8EFF',
+            tooltip: 'Buckingham Palace',
+            popup: 'Official royal residence',
+          },
+
+          // ROME POIs - Only visible at zoom level >= 11
+          colosseum: {
+            lat: 41.8902,
+            lon: 12.4922,
+            zoom: 15,
+            minZoom: 11,
+            markerColor: '#6BFF6B',
+            tooltip: 'Colosseum',
+            popup: 'Ancient amphitheater | Built 70-80 AD',
+          },
+          vatican: {
+            lat: 41.9029,
+            lon: 12.4534,
+            zoom: 15,
+            minZoom: 11,
+            markerColor: '#6BFF6B',
+            tooltip: 'Vatican City',
+            popup: "St. Peter's Basilica & Sistine Chapel",
+          },
+          trevi: {
+            lat: 41.9009,
+            lon: 12.4833,
+            zoom: 15,
+            minZoom: 11,
+            markerColor: '#6BFF6B',
+            tooltip: 'Trevi Fountain',
+            popup: 'Largest Baroque fountain in Rome',
+          },
+        };
+
+        StoryMap({
+          container: '.main',
+          mapContainer: 'map',
+          markers: markers,
+        });
+      })();
+    </script>
+  </body>
+</html>

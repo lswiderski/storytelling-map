@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Combined Triggers Demo - Storytelling Map</title>
+    <style>
+      .main section {
+        cursor: pointer;
+        transition:
+          background-color 0.3s ease,
+          border-left 0.3s ease;
+        border-left: 4px solid transparent;
+      }
+      .main section:hover {
+        background-color: #f8f9fa;
+        border-left: 4px solid #667eea;
+      }
+      .demo-info {
+        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        border: 2px solid #667eea;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .demo-info h4 {
+        margin-top: 0;
+        color: #5a67d8;
+      }
+      .feature-badge {
+        display: inline-block;
+        background: #667eea;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-right: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 header">
+          <h1>Combined Triggers Demo</h1>
+          <div class="demo-info">
+            <h4>🎯 Dual Interaction Modes:</h4>
+            <p>
+              This demo enables <strong>BOTH</strong> scroll and mouseover
+              triggers simultaneously!
+            </p>
+            <p>
+              <span class="feature-badge">📜 SCROLL</span> Navigate by scrolling
+              through content<br />
+              <span class="feature-badge">🖱️ HOVER</span> Instantly jump to
+              locations by hovering over sections
+            </p>
+            <p>
+              This provides maximum flexibility - users can choose their
+              preferred interaction method. Try both ways to navigate!
+            </p>
+          </div>
+          <p>
+            The <code>trigger: 'both'</code> setting combines the best of both
+            worlds. Scroll naturally through the story, or hover for quick
+            navigation. Perfect for users who want multiple ways to interact
+            with your content.
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-9 col-md-7 main">
+          <section data-place="overview">
+            <h2>African Cities Overview</h2>
+            <p>
+              Welcome to a tour of major African cities. This demo uses both
+              scroll and mouseover triggers, giving you complete freedom in how
+              you navigate.
+            </p>
+            <p>
+              <strong>Try it:</strong> Scroll down normally to see locations
+              change, OR hover your mouse over any section to instantly jump to
+              that location on the map!
+            </p>
+          </section>
+
+          <section data-place="cairo">
+            <h2>Cairo, Egypt</h2>
+            <p>
+              Cairo, Egypt's sprawling capital, is set on the Nile River. At its
+              heart is Tahrir Square and the vast Egyptian Museum, a trove of
+              antiquities including royal mummies and gilded King Tutankhamun
+              artifacts.
+            </p>
+            <p>
+              The city is home to the ancient Giza pyramid complex and its Great
+              Sphinx. With over 20 million residents, Cairo is one of Africa's
+              largest urban areas.
+            </p>
+          </section>
+
+          <section data-place="lagos">
+            <h2>Lagos, Nigeria</h2>
+            <p>
+              Lagos is a city in the Nigerian state of Lagos. The city, with its
+              adjoining conurbation, is the most populous in Nigeria and on the
+              African continent.
+            </p>
+            <p>
+              A major financial center for Africa, Lagos is also known for its
+              vibrant music scene, particularly Afrobeats, and its busy markets.
+              The city sprawls across islands and the mainland.
+            </p>
+          </section>
+
+          <section data-place="nairobi">
+            <h2>Nairobi, Kenya</h2>
+            <p>
+              Nairobi is Kenya's capital city. In addition to its urban core,
+              the city has Nairobi National Park, a large game reserve known for
+              breeding endangered black rhinos and home to giraffes, zebras and
+              lions.
+            </p>
+            <p>
+              The city serves as a major hub for business and culture in East
+              Africa. It's also a starting point for African safaris and home to
+              numerous tech startups.
+            </p>
+          </section>
+
+          <section data-place="johannesburg">
+            <h2>Johannesburg, South Africa</h2>
+            <p>
+              Johannesburg is a large city in Gauteng Province of South Africa.
+              It was established in 1886 following the discovery of gold on what
+              had been a farm.
+            </p>
+            <p>
+              The city is known as the economic hub of Africa and is one of the
+              50 largest urban areas in the world. Major attractions include the
+              Apartheid Museum, Constitution Hill, and Gold Reef City.
+            </p>
+          </section>
+
+          <section data-place="marrakech">
+            <h2>Marrakech, Morocco</h2>
+            <p>
+              Marrakech is a former imperial city in western Morocco. It's a
+              major economic center with mosques, palaces and gardens. The
+              medina is a densely packed, walled medieval city dating to the
+              Berber Empire.
+            </p>
+            <p>
+              The bustling Jemaa el-Fnaa square hosts snake charmers, musicians
+              and food vendors. The city is known for its traditional souks
+              (markets) and vibrant culture.
+            </p>
+          </section>
+
+          <section data-place="addis-ababa">
+            <h2>Addis Ababa, Ethiopia</h2>
+            <p>
+              Addis Ababa is the capital of Ethiopia and the headquarters of the
+              African Union. At an elevation of 2,355 meters, it's one of the
+              highest capital cities in the world.
+            </p>
+            <p>
+              The city is known for its contrasts - modern buildings stand
+              alongside traditional markets. The National Museum houses the
+              fossilized skeleton of 'Lucy,' an early human ancestor discovered
+              in Ethiopia.
+            </p>
+          </section>
+
+          <section data-place="overview">
+            <h2>End of Tour</h2>
+            <p>
+              Thanks for exploring! You've experienced how both scroll and hover
+              interactions can work together seamlessly. This flexibility makes
+              your storytelling map accessible to different user preferences and
+              devices.
+            </p>
+            <p>
+              <strong>Remember:</strong> You scrolled naturally through the
+              content AND had the option to hover for instant navigation. That's
+              the power of combined triggers!
+            </p>
+          </section>
+        </div>
+        <div id="map" class="col-sm-3 col-md-5 sidebar"></div>
+      </div>
+    </div>
+
+    <script src="../src/storytellingmap.js"></script>
+    <script type="text/javascript">
+      (function () {
+        'use strict';
+
+        var markers = {
+          overview: {
+            lat: 5.0,
+            lon: 20.0,
+            zoom: 3,
+          },
+          cairo: {
+            lat: 30.0444,
+            lon: 31.2357,
+            zoom: 11,
+          },
+          lagos: {
+            lat: 6.5244,
+            lon: 3.3792,
+            zoom: 11,
+          },
+          nairobi: {
+            lat: -1.2864,
+            lon: 36.8172,
+            zoom: 11,
+          },
+          johannesburg: {
+            lat: -26.2041,
+            lon: 28.0473,
+            zoom: 11,
+          },
+          marrakech: {
+            lat: 31.6295,
+            lon: -7.9811,
+            zoom: 12,
+          },
+          'addis-ababa': {
+            lat: 9.032,
+            lon: 38.7469,
+            zoom: 11,
+          },
+        };
+
+        StoryMap({
+          container: '.main',
+          mapContainer: 'map',
+          markers: markers,
+          trigger: 'both', // Enable BOTH scroll and mouseover triggers!
+        });
+      })();
+    </script>
+  </body>
+</html>

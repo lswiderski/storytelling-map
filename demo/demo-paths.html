@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Curved Paths Demo - Storytelling Map</title>
+    <style>
+      .demo-info {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .demo-info h4 {
+        margin-top: 0;
+        color: #856404;
+      }
+      .path-legend {
+        background: white;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 10px;
+      }
+      .path-legend-item {
+        display: flex;
+        align-items: center;
+        margin: 5px 0;
+      }
+      .path-line {
+        width: 40px;
+        height: 3px;
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 header">
+          <h1>Curved Paths Demo</h1>
+          <div class="demo-info">
+            <h4>🎯 Path Features:</h4>
+            <p>
+              This demo showcases various path configurations between locations:
+            </p>
+            <div class="path-legend">
+              <div class="path-legend-item">
+                <div class="path-line" style="background: #ff0000"></div>
+                <span>Red curved path (right curve)</span>
+              </div>
+              <div class="path-legend-item">
+                <div class="path-line" style="background: #0000ff"></div>
+                <span>Blue curved path (left curve)</span>
+              </div>
+              <div class="path-legend-item">
+                <div class="path-line" style="background: #00ff00"></div>
+                <span>Green straight path</span>
+              </div>
+              <div class="path-legend-item">
+                <div
+                  class="path-line"
+                  style="background: #ff00ff; border-style: dashed"
+                ></div>
+                <span>Magenta dashed path</span>
+              </div>
+            </div>
+          </div>
+          <p>
+            Paths can be straight or curved, with customizable colors, styles,
+            tooltips, and popups. Hover over the paths to see interactive
+            information!
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-9 col-md-7 main">
+          <section data-place="overview">
+            <h2>South American Journey</h2>
+            <p>
+              Welcome to a tour of major South American cities. Watch as the map
+              displays various path styles connecting the locations.
+            </p>
+            <p>
+              Paths can be customized with different colors, curve directions,
+              line styles, and interactive elements. Try hovering over the paths
+              on the map!
+            </p>
+          </section>
+
+          <section data-place="buenos-aires">
+            <h2>Buenos Aires, Argentina</h2>
+            <p>
+              Buenos Aires is Argentina's big, cosmopolitan capital city. Its
+              center is the Plaza de Mayo, lined with stately 19th-century
+              buildings including Casa Rosada, the iconic presidential palace.
+            </p>
+            <p>
+              Known for its tango culture, European-style architecture, and
+              vibrant nightlife. A
+              <strong style="color: #ff0000">red curved path</strong> connects
+              to the next city.
+            </p>
+          </section>
+
+          <section data-place="santiago">
+            <h2>Santiago, Chile</h2>
+            <p>
+              Santiago, Chile's capital and largest city, sits in a valley
+              surrounded by the Andes and Chilean Coast Range mountains. The
+              city's palm-lined Plaza de Armas contains the neoclassical
+              cathedral and the National History Museum.
+            </p>
+            <p>
+              A
+              <strong style="color: #0000ff"
+                >blue curved path (left curve)</strong
+              >
+              leads to Lima.
+            </p>
+          </section>
+
+          <section data-place="lima">
+            <h2>Lima, Peru</h2>
+            <p>
+              Lima, the capital of Peru, lies on the country's arid Pacific
+              coast. Though its colonial center is preserved, it's a bustling
+              metropolis and one of South America's largest cities.
+            </p>
+            <p>
+              A
+              <strong style="color: #00ff00">straight green path</strong>
+              connects to Bogotá.
+            </p>
+          </section>
+
+          <section data-place="bogota">
+            <h2>Bogotá, Colombia</h2>
+            <p>
+              Bogotá is Colombia's sprawling, high-altitude capital. La
+              Candelaria, its cobblestoned center, features colonial-era
+              landmarks like the neoclassical performance hall Teatro Colón.
+            </p>
+            <p>
+              A
+              <strong style="color: #ff00ff">dashed magenta path</strong>
+              connects to Caracas.
+            </p>
+          </section>
+
+          <section data-place="caracas">
+            <h2>Caracas, Venezuela</h2>
+            <p>
+              Caracas, Venezuela's capital, is a commercial and cultural center
+              located in a northern mountain valley. Independence leader Simón
+              Bolívar is buried at the National Pantheon of Venezuela.
+            </p>
+            <p>
+              A
+              <strong style="color: #ff6600">thick orange curved path</strong>
+              connects to Brasília.
+            </p>
+          </section>
+
+          <section data-place="brasilia">
+            <h2>Brasília, Brazil</h2>
+            <p>
+              Brasília, inaugurated as Brazil's capital in 1960, is a planned
+              city distinguished by its white, modern architecture, chiefly
+              designed by Oscar Niemeyer.
+            </p>
+            <p>This completes our South American tour!</p>
+          </section>
+        </div>
+        <div id="map" class="col-sm-3 col-md-5 sidebar"></div>
+      </div>
+    </div>
+
+    <script src="../src/storytellingmap.js"></script>
+    <script type="text/javascript">
+      (function () {
+        'use strict';
+
+        var markers = {
+          overview: {
+            lat: -15.0,
+            lon: -60.0,
+            zoom: 4,
+          },
+          'buenos-aires': {
+            lat: -34.6037,
+            lon: -58.3816,
+            zoom: 10,
+          },
+          santiago: {
+            lat: -33.4489,
+            lon: -70.6693,
+            zoom: 10,
+          },
+          lima: {
+            lat: -12.0464,
+            lon: -77.0428,
+            zoom: 10,
+          },
+          bogota: {
+            lat: 4.711,
+            lon: -74.0721,
+            zoom: 10,
+          },
+          caracas: {
+            lat: 10.4806,
+            lon: -66.9036,
+            zoom: 10,
+          },
+          brasilia: {
+            lat: -15.8267,
+            lon: -47.9218,
+            zoom: 10,
+          },
+        };
+
+        // Define custom paths between locations
+        var paths = [
+          {
+            from: 'buenos-aires',
+            to: 'santiago',
+            color: '#FF0000',
+            weight: 4,
+            opacity: 0.7,
+            curved: true,
+            curveDirection: 'right',
+            tooltip: 'Buenos Aires to Santiago',
+            popup: 'Distance: ~1,400 km across the Andes',
+          },
+          {
+            from: 'santiago',
+            to: 'lima',
+            color: '#0000FF',
+            weight: 4,
+            opacity: 0.7,
+            curved: true,
+            curveDirection: 'left',
+            tooltip: 'Santiago to Lima',
+            popup: 'Distance: ~2,500 km along the Pacific coast',
+          },
+          {
+            from: 'lima',
+            to: 'bogota',
+            color: '#00FF00',
+            weight: 3,
+            opacity: 0.7,
+            curved: false, // Straight line
+            tooltip: 'Lima to Bogotá',
+            popup: 'Distance: ~1,900 km',
+          },
+          {
+            from: 'bogota',
+            to: 'caracas',
+            color: '#FF00FF',
+            weight: 3,
+            opacity: 0.6,
+            dashArray: '10, 10', // Dashed line
+            curved: true,
+            tooltip: 'Bogotá to Caracas',
+            popup: 'Distance: ~900 km',
+          },
+          {
+            from: 'caracas',
+            to: 'brasilia',
+            color: '#FF6600',
+            weight: 5,
+            opacity: 0.7,
+            curved: true,
+            curveDirection: 'right',
+            tooltip: 'Caracas to Brasília',
+            popup: 'Distance: ~4,200 km across northern South America',
+          },
+        ];
+
+        StoryMap({
+          container: '.main',
+          mapContainer: 'map',
+          markers: markers,
+          paths: paths,
+        });
+      })();
+    </script>
+  </body>
+</html>

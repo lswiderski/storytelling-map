@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Mobile Layout Demo - Storytelling Map</title>
+    <style>
+      .demo-info {
+        background: #e7f3ff;
+        border: 1px solid #b3d9ff;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .demo-info h4 {
+        margin-top: 0;
+        color: #004085;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 header">
+          <h1>Mobile Layout Demo</h1>
+          <div class="demo-info">
+            <h4>📱 Responsive Layout:</h4>
+            <p>
+              This demo uses the <strong>"above"</strong> mobile layout mode. On
+              screens smaller than 768px wide, the map will appear
+              <strong>above</strong> the content instead of beside it.
+            </p>
+            <p>
+              <strong>Try it:</strong> Resize your browser window to see the
+              layout change, or view this demo on a mobile device!
+            </p>
+          </div>
+          <p>
+            The storytelling map library includes responsive layout options
+            perfect for mobile devices. The "above" mode places the map at the
+            top on small screens, making it easy to reference while reading
+            content below.
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-9 col-md-7 main">
+          <section data-place="overview">
+            <h2>Asian Cities Overview</h2>
+            <p>
+              Welcome to our tour of major Asian cities. This demo is optimized
+              for mobile viewing with the map positioned above the content on
+              smaller screens.
+            </p>
+            <p>
+              The mobile layout automatically activates when your screen width
+              is below 768 pixels, providing an optimal viewing experience
+              across all devices.
+            </p>
+          </section>
+
+          <section data-place="singapore">
+            <h2>Singapore</h2>
+            <p>
+              Singapore is a sovereign island city-state in maritime Southeast
+              Asia. It's a global financial center with a tropical climate and
+              multicultural population.
+            </p>
+            <p>
+              Key attractions include Marina Bay Sands, Gardens by the Bay, and
+              the vibrant neighborhoods of Chinatown and Little India.
+            </p>
+          </section>
+
+          <section data-place="bangkok">
+            <h2>Bangkok, Thailand</h2>
+            <p>
+              Bangkok, Thailand's capital, is a large city known for ornate
+              shrines and vibrant street life. The Grand Palace, with its sacred
+              Wat Phra Kaew temple, is a major landmark.
+            </p>
+            <p>
+              The city is famous for its bustling markets, delicious street
+              food, and beautiful temples adorned with intricate Thai
+              architectural details.
+            </p>
+          </section>
+
+          <section data-place="seoul">
+            <h2>Seoul, South Korea</h2>
+            <p>
+              Seoul, the capital of South Korea, is a huge metropolis where
+              modern skyscrapers, high-tech subways and pop culture meet
+              Buddhist temples, palaces, and street markets.
+            </p>
+            <p>
+              Major attractions include Gyeongbokgung Palace, N Seoul Tower, and
+              the trendy Gangnam district. The city seamlessly blends tradition
+              with cutting-edge technology.
+            </p>
+          </section>
+
+          <section data-place="mumbai">
+            <h2>Mumbai, India</h2>
+            <p>
+              Mumbai (formerly Bombay) is a densely populated city on India's
+              west coast. It's the financial center of India and home to the
+              Bollywood film industry.
+            </p>
+            <p>
+              The Gateway of India monument, Marine Drive promenade, and vibrant
+              bazaars showcase the city's colonial heritage and dynamic culture.
+            </p>
+          </section>
+
+          <section data-place="hong-kong">
+            <h2>Hong Kong</h2>
+            <p>
+              Hong Kong is a special administrative region of China, known for
+              its skyline, deep natural harbor, and vibrant mix of Eastern and
+              Western influences.
+            </p>
+            <p>
+              Victoria Peak offers stunning city views, while the Symphony of
+              Lights show illuminates the harbor nightly. The city is a global
+              hub for trade and finance.
+            </p>
+          </section>
+        </div>
+        <div id="map" class="col-sm-3 col-md-5 sidebar"></div>
+      </div>
+    </div>
+
+    <script src="../src/storytellingmap.js"></script>
+    <script type="text/javascript">
+      (function () {
+        'use strict';
+
+        var markers = {
+          overview: {
+            lat: 20.0,
+            lon: 100.0,
+            zoom: 4,
+          },
+          singapore: {
+            lat: 1.3521,
+            lon: 103.8198,
+            zoom: 11,
+          },
+          bangkok: {
+            lat: 13.7563,
+            lon: 100.5018,
+            zoom: 11,
+          },
+          seoul: {
+            lat: 37.5665,
+            lon: 126.978,
+            zoom: 11,
+          },
+          mumbai: {
+            lat: 19.076,
+            lon: 72.8777,
+            zoom: 11,
+          },
+          'hong-kong': {
+            lat: 22.3193,
+            lon: 114.1694,
+            zoom: 11,
+          },
+        };
+
+        StoryMap({
+          container: '.main',
+          mapContainer: 'map',
+          markers: markers,
+          mobileLayout: 'above', // Map appears above content on mobile
+          mobileBreakpoint: 768, // Activate mobile layout below this width
+        });
+      })();
+    </script>
+  </body>
+</html>

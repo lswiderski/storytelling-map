@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Mouseover Trigger Demo - Storytelling Map</title>
+    <style>
+      .main section {
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .main section:hover {
+        background-color: #f8f9fa;
+      }
+      .demo-info {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .demo-info h4 {
+        margin-top: 0;
+        color: #856404;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 header">
+          <h1>Mouseover Trigger Demo</h1>
+          <div class="demo-info">
+            <h4>🖱️ How to use:</h4>
+            <p>
+              <strong>Hover</strong> your mouse over any section below to
+              navigate the map to that location. No scrolling required!
+            </p>
+          </div>
+          <p>
+            This demo showcases the <strong>mouseover trigger</strong> feature.
+            Instead of scrolling to activate map locations, simply move your
+            mouse over a section and the map will instantly navigate to that
+            location. This is perfect for desktop users who want quick,
+            interactive navigation.
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-9 col-md-7 main">
+          <section data-place="overview">
+            <h2>Overview - Scandinavia</h2>
+            <p>
+              Welcome to Scandinavia! This tour will take you through the major
+              cities of Norway. Hover over any section to instantly navigate the
+              map to that location.
+            </p>
+            <p>
+              The mouseover trigger mode is ideal for presentations, dashboards,
+              or any scenario where you want immediate feedback when users
+              interact with content sections.
+            </p>
+          </section>
+
+          <section data-place="oslo">
+            <h2>Oslo - The Capital</h2>
+            <p>
+              Oslo is the capital and most populous city of Norway. Founded in
+              the year 1040, Oslo is known for its green spaces, museums, and
+              vibrant cultural scene.
+            </p>
+            <p>
+              Major attractions include the Viking Ship Museum, the Munch Museum
+              featuring "The Scream," and the modern Oslo Opera House.
+            </p>
+          </section>
+
+          <section data-place="bergen">
+            <h2>Bergen - Gateway to the Fjords</h2>
+            <p>
+              Bergen is a city on Norway's southwestern coast, surrounded by
+              mountains and fjords. It's known for its colorful wooden houses
+              along the old wharf, Bryggen.
+            </p>
+            <p>
+              As the gateway to the fjords of Norway, Bergen is a popular
+              starting point for exploring the dramatic Norwegian landscape. The
+              city has a rich maritime history dating back to the Hanseatic
+              League.
+            </p>
+          </section>
+
+          <section data-place="trondheim">
+            <h2>Trondheim - Historical Heart</h2>
+            <p>
+              Trondheim was Norway's capital during the Viking Age and remains
+              an important religious and cultural center. The stunning Nidaros
+              Cathedral is Norway's national sanctuary.
+            </p>
+            <p>
+              Today, Trondheim is a vibrant university city with a thriving
+              technology sector and a beautiful old town with colorful wooden
+              buildings.
+            </p>
+          </section>
+
+          <section data-place="tromso">
+            <h2>Tromsø - Gateway to the Arctic</h2>
+            <p>
+              Tromsø is a city in northern Norway, located 350 kilometers north
+              of the Arctic Circle. It's known as the "Gateway to the Arctic"
+              and is one of the best places to see the Northern Lights.
+            </p>
+            <p>
+              Despite its northern location, Tromsø has relatively mild winters
+              due to the warming effect of the Gulf Stream. The city experiences
+              polar night in winter and midnight sun in summer.
+            </p>
+          </section>
+
+          <section data-place="stavanger">
+            <h2>Stavanger - Oil Capital</h2>
+            <p>
+              Stavanger is Norway's fourth largest city and is often called the
+              oil capital of Norway. The city combines modern business with
+              charming old-town wooden houses.
+            </p>
+            <p>
+              Nearby attractions include the famous Preikestolen (Pulpit Rock),
+              one of Norway's most spectacular cliff formations overlooking
+              Lysefjord.
+            </p>
+          </section>
+        </div>
+        <div id="map" class="col-sm-3 col-md-5 sidebar"></div>
+      </div>
+    </div>
+
+    <script src="../src/storytellingmap.js"></script>
+    <script type="text/javascript">
+      (function () {
+        'use strict';
+
+        var markers = {
+          overview: {
+            lat: 65,
+            lon: 13,
+            zoom: 5,
+          },
+          oslo: {
+            lat: 59.9139,
+            lon: 10.7522,
+            zoom: 10,
+          },
+          bergen: {
+            lat: 60.3913,
+            lon: 5.3221,
+            zoom: 10,
+          },
+          trondheim: {
+            lat: 63.4305,
+            lon: 10.3951,
+            zoom: 10,
+          },
+          tromso: {
+            lat: 69.6492,
+            lon: 18.9553,
+            zoom: 10,
+          },
+          stavanger: {
+            lat: 58.97,
+            lon: 5.7331,
+            zoom: 10,
+          },
+        };
+
+        StoryMap({
+          container: '.main',
+          mapContainer: 'map',
+          markers: markers,
+          trigger: 'mouseover', // This is the key setting!
+        });
+      })();
+    </script>
+  </body>
+</html>

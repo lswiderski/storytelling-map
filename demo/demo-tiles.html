@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Custom Map Tiles Demo - Storytelling Map</title>
+    <style>
+      .demo-info {
+        background: #e2e3e5;
+        border: 1px solid #d6d8db;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .demo-info h4 {
+        margin-top: 0;
+        color: #383d41;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 header">
+          <h1>Custom Map Tiles Demo</h1>
+          <div class="demo-info">
+            <h4>🗺️ Custom Basemap:</h4>
+            <p>
+              This demo uses <strong>CartoDB Dark Matter</strong> tiles instead
+              of the default OpenStreetMap tiles. You can use any
+              Leaflet-compatible tile provider to customize the appearance of
+              your map!
+            </p>
+            <p>
+              Popular options include: CartoDB, Mapbox, Stamen, ESRI, and more.
+              Each provides different visual styles from satellite imagery to
+              artistic renditions.
+            </p>
+          </div>
+          <p>
+            The storytelling map library allows you to customize the map tiles
+            using the
+            <code>createMap</code> option. Simply create your Leaflet map with
+            your preferred tile layer and return it.
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-9 col-md-7 main">
+          <section data-place="overview">
+            <h2>World Wonders Tour</h2>
+            <p>
+              Welcome to a tour of some of the world's most famous landmarks and
+              wonders. Notice the dark, minimalist map style - perfect for
+              highlighting colored markers and creating a modern, sleek
+              aesthetic.
+            </p>
+            <p>
+              Different map tiles can dramatically change the look and feel of
+              your storytelling experience. Dark themes work great for evening
+              or space-themed stories.
+            </p>
+          </section>
+
+          <section data-place="egypt">
+            <h2>Great Pyramid of Giza, Egypt</h2>
+            <p>
+              The Great Pyramid of Giza is the oldest and largest of the three
+              pyramids in the Giza pyramid complex. It is the oldest of the
+              Seven Wonders of the Ancient World, and the only one to remain
+              largely intact.
+            </p>
+            <p>
+              Built around 2560 BC over a 20-year period, the pyramid was
+              constructed as a tomb for Pharaoh Khufu. It stood as the tallest
+              man-made structure in the world for over 3,800 years.
+            </p>
+          </section>
+
+          <section data-place="china">
+            <h2>Great Wall of China</h2>
+            <p>
+              The Great Wall of China is a series of fortifications made of
+              stone, brick, tamped earth, wood, and other materials. It was
+              built along the historical northern borders of China to protect
+              against invasions.
+            </p>
+            <p>
+              Stretching over 13,000 miles, the wall was built over many
+              centuries by different dynasties. It is one of the most impressive
+              architectural feats in human history.
+            </p>
+          </section>
+
+          <section data-place="india">
+            <h2>Taj Mahal, India</h2>
+            <p>
+              The Taj Mahal is an ivory-white marble mausoleum on the southern
+              bank of the river Yamuna in Agra. It was commissioned in 1632 by
+              the Mughal emperor Shah Jahan to house the tomb of his favorite
+              wife, Mumtaz Mahal.
+            </p>
+            <p>
+              Considered one of the finest examples of Mughal architecture, the
+              Taj Mahal combines elements from Islamic, Persian, Ottoman
+              Turkish, and Indian architectural styles.
+            </p>
+          </section>
+
+          <section data-place="peru">
+            <h2>Machu Picchu, Peru</h2>
+            <p>
+              Machu Picchu is a 15th-century Inca citadel located in the Eastern
+              Cordillera of southern Peru. It is situated on a mountain ridge
+              2,430 meters above sea level.
+            </p>
+            <p>
+              Built by the Inca emperor Pachacuti around 1450, it was abandoned
+              a century later during the Spanish Conquest. It remained largely
+              unknown until American historian Hiram Bingham brought it to
+              international attention in 1911.
+            </p>
+          </section>
+
+          <section data-place="italy">
+            <h2>Colosseum, Italy</h2>
+            <p>
+              The Colosseum is an oval amphitheater in the center of Rome,
+              Italy. Built of travertine limestone, tuff, and brick-faced
+              concrete, it was the largest amphitheater ever built at the time.
+            </p>
+            <p>
+              Construction began under Emperor Vespasian in AD 72 and was
+              completed in AD 80 under his successor Titus. The Colosseum could
+              hold an estimated 50,000 to 80,000 spectators.
+            </p>
+          </section>
+        </div>
+        <div id="map" class="col-sm-3 col-md-5 sidebar"></div>
+      </div>
+    </div>
+
+    <script src="../src/storytellingmap.js"></script>
+    <script type="text/javascript">
+      (function () {
+        'use strict';
+
+        var markers = {
+          overview: {
+            lat: 20.0,
+            lon: 30.0,
+            zoom: 2,
+          },
+          egypt: {
+            lat: 29.9792,
+            lon: 31.1342,
+            zoom: 12,
+          },
+          china: {
+            lat: 40.4319,
+            lon: 116.5704,
+            zoom: 11,
+          },
+          india: {
+            lat: 27.1751,
+            lon: 78.0421,
+            zoom: 14,
+          },
+          peru: {
+            lat: -13.1631,
+            lon: -72.545,
+            zoom: 13,
+          },
+          italy: {
+            lat: 41.8902,
+            lon: 12.4922,
+            zoom: 15,
+          },
+        };
+
+        StoryMap({
+          container: '.main',
+          mapContainer: 'map',
+          markers: markers,
+          // Custom map creation with dark theme tiles
+          createMap: function () {
+            var map = L.map('map').setView([20, 30], 2);
+
+            // Using CartoDB Dark Matter tiles
+            L.tileLayer(
+              'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+              {
+                attribution:
+                  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 20,
+              },
+            ).addTo(map);
+
+            return map;
+          },
+        });
+      })();
+    </script>
+  </body>
+</html>

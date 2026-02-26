@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Minimal Setup Demo - Storytelling Map</title>
+    <style>
+      .demo-info {
+        background: #d1ecf1;
+        border: 1px solid #bee5eb;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .demo-info h4 {
+        margin-top: 0;
+        color: #0c5460;
+      }
+      .code-example {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 15px;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        overflow-x: auto;
+        margin: 15px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 header">
+          <h1>Minimal Setup Demo</h1>
+          <div class="demo-info">
+            <h4>🚀 Quick Start Guide:</h4>
+            <p>
+              This demo shows the
+              <strong>absolute minimum configuration</strong> needed to get
+              started with the storytelling map library. Just define your
+              markers and initialize!
+            </p>
+          </div>
+          <p>
+            This is the simplest possible setup for a storytelling map. It uses
+            default settings and requires only a few lines of code to get up and
+            running.
+          </p>
+          <div class="code-example">
+            var markers = {<br />
+            &nbsp;&nbsp;place1: { lat: 40.7128, lon: -74.0060, zoom: 10 },<br />
+            &nbsp;&nbsp;place2: { lat: 34.0522, lon: -118.2437, zoom: 10 }<br />
+            };<br />
+            <br />
+            StoryMap({<br />
+            &nbsp;&nbsp;markers: markers<br />
+            });
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-9 col-md-7 main">
+          <section data-place="start">
+            <h2>Getting Started</h2>
+            <p>
+              Welcome! This is a minimal storytelling map example with just
+              three locations. As you scroll through this content, the map will
+              automatically update to show the relevant location.
+            </p>
+            <p>
+              No complex configuration needed - just define your markers with
+              latitude, longitude, and zoom level, then initialize StoryMap with
+              those markers.
+            </p>
+          </section>
+
+          <section data-place="new-york">
+            <h2>New York City</h2>
+            <p>
+              New York City is the most populous city in the United States.
+              Known for its iconic skyline, diverse culture, and as a global hub
+              for finance, arts, and media.
+            </p>
+            <p>
+              Famous landmarks include the Statue of Liberty, Empire State
+              Building, Central Park, Times Square, and Broadway theaters.
+            </p>
+          </section>
+
+          <section data-place="chicago">
+            <h2>Chicago</h2>
+            <p>
+              Chicago, on Lake Michigan in Illinois, is among the largest cities
+              in the U.S. Famed for its bold architecture, it has a skyline
+              punctuated by skyscrapers.
+            </p>
+            <p>
+              The city is known for deep-dish pizza, jazz music, the Willis
+              Tower (formerly Sears Tower), and its beautiful lakefront parks.
+            </p>
+          </section>
+
+          <section data-place="los-angeles">
+            <h2>Los Angeles</h2>
+            <p>
+              Los Angeles is a sprawling Southern California city and the center
+              of the nation's film and television industry. Near its iconic
+              Hollywood sign, studios offer tours.
+            </p>
+            <p>
+              The city features beaches, mountains, and diverse neighborhoods.
+              Santa Monica Pier, Venice Beach, and Griffith Observatory are
+              popular attractions.
+            </p>
+          </section>
+
+          <section data-place="start">
+            <h2>That's It!</h2>
+            <p>
+              You've just experienced a storytelling map with minimal setup. The
+              map automatically:
+            </p>
+            <ul>
+              <li>Detects sections with <code>data-place</code> attributes</li>
+              <li>Updates as you scroll through content</li>
+              <li>Animates smoothly between locations</li>
+              <li>Uses default OpenStreetMap tiles</li>
+            </ul>
+            <p>
+              From here, you can explore more advanced features like custom
+              paths, tooltips, mouseover triggers, and custom styling!
+            </p>
+          </section>
+        </div>
+        <div id="map" class="col-sm-3 col-md-5 sidebar"></div>
+      </div>
+    </div>
+
+    <script src="../src/storytellingmap.js"></script>
+    <script type="text/javascript">
+      (function () {
+        'use strict';
+
+        // Minimal configuration - just define markers!
+        var markers = {
+          start: {
+            lat: 41.8781,
+            lon: -87.6298,
+            zoom: 5,
+          },
+          'new-york': {
+            lat: 40.7128,
+            lon: -74.006,
+            zoom: 10,
+          },
+          chicago: {
+            lat: 41.8781,
+            lon: -87.6298,
+            zoom: 10,
+          },
+          'los-angeles': {
+            lat: 34.0522,
+            lon: -118.2437,
+            zoom: 10,
+          },
+        };
+
+        // Initialize with just the markers - that's it!
+        StoryMap({
+          container: '.main',
+          mapContainer: 'map',
+          markers: markers,
+        });
+      })();
+    </script>
+  </body>
+</html>

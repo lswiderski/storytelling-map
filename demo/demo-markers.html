@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Custom Markers Demo - Storytelling Map</title>
+    <style>
+      .demo-info {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .demo-info h4 {
+        margin-top: 0;
+        color: #155724;
+      }
+      .color-badge {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin-right: 5px;
+        border: 2px solid #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 header">
+          <h1>Custom Markers & Colors Demo</h1>
+          <div class="demo-info">
+            <h4>🎨 Custom Styling Features:</h4>
+            <ul>
+              <li>
+                <strong>Color-coded markers:</strong> Each location has a unique
+                color
+              </li>
+              <li>
+                <strong>Zoom restrictions:</strong> Some markers have min/max
+                zoom levels
+              </li>
+              <li>
+                <strong>Hidden markers:</strong> One location has no visible
+                marker
+              </li>
+              <li>
+                <strong>Tooltips:</strong> Hover over markers to see information
+              </li>
+            </ul>
+          </div>
+          <p>
+            This demo demonstrates advanced marker customization including
+            custom colors, zoom level restrictions, and visibility options.
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-9 col-md-7 main">
+          <section data-place="overview">
+            <h2>World Cities Tour</h2>
+            <p>
+              This tour showcases major world cities with custom-styled markers.
+              Each marker has been customized with different colors and
+              properties to demonstrate the flexibility of the storytelling map
+              system.
+            </p>
+          </section>
+
+          <section data-place="tokyo">
+            <h2>
+              <span
+                class="color-badge"
+                style="background-color: #ff0000"
+              ></span>
+              Tokyo, Japan
+            </h2>
+            <p>
+              Tokyo, officially Tokyo Metropolis, is the capital of Japan and
+              one of the most populated urban areas in the world. The city is
+              known for its modern architecture, cutting-edge technology, and
+              rich cultural traditions.
+            </p>
+            <p>
+              This marker is styled in
+              <strong style="color: #ff0000">red</strong> and has a minimum zoom
+              level of 5, preventing excessive zoom-out.
+            </p>
+          </section>
+
+          <section data-place="sydney">
+            <h2>
+              <span
+                class="color-badge"
+                style="background-color: #00ff00"
+              ></span>
+              Sydney, Australia
+            </h2>
+            <p>
+              Sydney is the capital city of New South Wales and the most
+              populous city in Australia. Famous for its harbourfront Sydney
+              Opera House and the iconic Harbour Bridge.
+            </p>
+            <p>
+              This marker is styled in
+              <strong style="color: #00ff00">bright green</strong> with standard
+              zoom behavior.
+            </p>
+          </section>
+
+          <section data-place="dubai">
+            <h2>
+              <span
+                class="color-badge"
+                style="background-color: #ffd700"
+              ></span>
+              Dubai, UAE
+            </h2>
+            <p>
+              Dubai is a city in the United Arab Emirates known for luxury
+              shopping, ultramodern architecture, and a lively nightlife scene.
+              The Burj Khalifa, an 830m-tall tower, dominates the
+              skyscraper-filled skyline.
+            </p>
+            <p>
+              This marker is styled in
+              <strong style="color: #ffd700">gold</strong> to represent the
+              city's luxury and wealth.
+            </p>
+          </section>
+
+          <section data-place="newyork">
+            <h2>
+              <span
+                class="color-badge"
+                style="background-color: #0000ff"
+              ></span>
+              New York City, USA
+            </h2>
+            <p>
+              New York City comprises five boroughs sitting where the Hudson
+              River meets the Atlantic Ocean. At its core is Manhattan, a
+              densely populated borough that's among the world's major
+              commercial, financial and cultural centers.
+            </p>
+            <p>
+              This marker is styled in
+              <strong style="color: #0000ff">blue</strong> and has a maximum
+              zoom level of 13, preventing excessive zoom-in.
+            </p>
+          </section>
+
+          <section data-place="cape-town">
+            <h2>
+              <span
+                class="color-badge"
+                style="background-color: #ff00ff"
+              ></span>
+              Cape Town, South Africa
+            </h2>
+            <p>
+              Cape Town is a port city on South Africa's southwest coast, on a
+              peninsula beneath the imposing Table Mountain. The city is known
+              for its harbor, natural setting, and well-known landmarks such as
+              Table Mountain and Cape Point.
+            </p>
+            <p>
+              This marker is styled in
+              <strong style="color: #ff00ff">magenta</strong> with custom
+              tooltip and popup text.
+            </p>
+          </section>
+
+          <section data-place="antarctica">
+            <h2>Antarctica</h2>
+            <p>
+              Antarctica is Earth's southernmost continent, containing the
+              geographic South Pole. It is covered by ice with an average
+              thickness of 1.9 km.
+            </p>
+            <p>
+              <strong>Note:</strong> This location has a
+              <strong>hidden marker</strong> - no marker appears on the map, but
+              the map still navigates to this location when you scroll here.
+            </p>
+          </section>
+        </div>
+        <div id="map" class="col-sm-3 col-md-5 sidebar"></div>
+      </div>
+    </div>
+
+    <script src="../src/storytellingmap.js"></script>
+    <script type="text/javascript">
+      (function () {
+        'use strict';
+
+        var markers = {
+          overview: {
+            lat: 0,
+            lon: 0,
+            zoom: 2,
+          },
+          tokyo: {
+            lat: 35.6762,
+            lon: 139.6503,
+            zoom: 11,
+            markerColor: '#FF0000',
+            minZoom: 5, // Prevents zooming out too far
+            tooltip: 'Tokyo - Capital of Japan',
+            popup: 'Population: ~14 million',
+          },
+          sydney: {
+            lat: -33.8688,
+            lon: 151.2093,
+            zoom: 11,
+            markerColor: '#00FF00',
+            tooltip: "Sydney - Australia's largest city",
+          },
+          dubai: {
+            lat: 25.2048,
+            lon: 55.2708,
+            zoom: 11,
+            markerColor: '#FFD700',
+            tooltip: 'Dubai - City of Gold',
+            popup: 'Home to the Burj Khalifa',
+          },
+          newyork: {
+            lat: 40.7128,
+            lon: -74.006,
+            zoom: 11,
+            markerColor: '#0000FF',
+            maxZoom: 13, // Prevents zooming in too close
+            tooltip: 'New York City - The Big Apple',
+          },
+          'cape-town': {
+            lat: -33.9249,
+            lon: 18.4241,
+            zoom: 11,
+            markerColor: '#FF00FF',
+            tooltip: 'Cape Town - Mother City',
+            popup: 'Home to Table Mountain',
+          },
+          antarctica: {
+            lat: -75.0,
+            lon: 0.0,
+            zoom: 4,
+            hidden: true, // No marker shown on map
+          },
+        };
+
+        StoryMap({
+          container: '.main',
+          mapContainer: 'map',
+          markers: markers,
+        });
+      })();
+    </script>
+  </body>
+</html>
