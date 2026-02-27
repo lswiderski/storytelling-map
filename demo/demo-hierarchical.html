@@ -261,12 +261,6 @@
         'use strict';
 
         var markers = {
-          overview: {
-            lat: 48.5,
-            lon: 4.0,
-            zoom: 5,
-          },
-
           // CITY MARKERS - Only visible at zoom level <= 10
           paris: {
             lat: 48.8566,
@@ -385,6 +379,7 @@
           container: '.main',
           mapContainer: 'map',
           markers: markers,
+          mapInitialCenter: [48.5, 4.0], // Center on Paris initially
         });
       })();
     </script>

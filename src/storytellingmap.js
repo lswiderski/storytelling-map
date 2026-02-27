@@ -234,9 +234,11 @@ function StoryMap(options) {
         mobileLayout: 'normal', // 'normal' (left-right), 'above'
         disableOnSmallResolution: false, // If true and screen is small, map/events/callbacks are not initialized
         markerClickScrollToPlace: true, // Enable marker click to navigate and highlight sections
+        mapInitialCenter: [65, 18], // Initial map center point [latitude, longitude]
+        mapInitialZoom: 5, // Initial map zoom level
         createMap: function () {
             // Create a map in the "map" div, set the view to a given place and zoom
-            const map = L.map(options.mapContainer ?? 'map').setView([65, 18], 5);
+            const map = L.map(options.mapContainer ?? 'map').setView(settings.mapInitialCenter, settings.mapInitialZoom);
 
             // Add an OpenStreetMap tile layer
             L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
